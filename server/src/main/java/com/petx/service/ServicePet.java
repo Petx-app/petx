@@ -7,58 +7,20 @@ import com.petx.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.UUID;
 
 @Service
-public class ServicePet{
+public class ServicePet {
+
     @Autowired
     private PetRepository petRepository;
 
-//    EntityManagerFactory factory = Persistence
-//            .createEntityManagerFactory("petx");
-//
-//    public void postPet(Pet pet){
-//        EntityManager em = factory.createEntityManager();
-//        try{
-//            em.getTransaction().begin();
-//            em.persist(pet);
-//            em.getTransaction().commit();
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("falha ao salvar o pet:" + e.getMessage());
-//        }finally{
-//            em.close();
-//        }
-//    }
+    public void postPet(Pet pet) {
+        petRepository.save(pet);
+    }
 
-//    public String getQRCode(UUID id){
-//        EntityManager em = factory.createEntityManager();
-//        try{
-//            Pet pet = em.find(Pet.class, id);
-//            if(pet == null){
-//                throw new RuntimeException("pet nao encontrado com o id");
-//            }
-//
-//            if(!pet.getCadastrado()){
-//                return "";
-//            }else{
-//                return pet.getNome();
-//            }
-//
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("falha ao salvar o pet:" + e.getMessage());
-//        }finally {
-//            em.close();
-//
-//        }
-//    }
-
-    public GetQRCodeResponse getQRCode(UUID id){
-        Pet pet = petRepository.findByUUID(id);
+    public GetQRCodeResponse getQRCode(UUID id) {
+        Pet pet = petRepository.findByUuid(id);
         Usuario usuario = pet.getDono();
 
         GetQRCodeResponse getQRCodeResponse = new GetQRCodeResponse();
@@ -68,6 +30,4 @@ public class ServicePet{
 
         return getQRCodeResponse;
     }
-
-
 }

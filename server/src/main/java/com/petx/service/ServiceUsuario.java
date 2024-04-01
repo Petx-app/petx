@@ -1,29 +1,18 @@
 package com.petx.service;
 
 import com.petx.domain.Usuario;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.petx.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
+@Service
 public class ServiceUsuario {
 
-//    EntityManagerFactory factory = Persistence
-//            .createEntityManagerFactory("petx");
-//    public void postUsuario(Usuario usuario){
-//
-//        EntityManager em = factory.createEntityManager();
-//
-//        try{
-//            em.getTransaction().begin();
-//            em.persist(usuario);
-//            em.getTransaction().commit();
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("falha ao salvar o usuario:" + e.getMessage());
-//        }finally{
-//            em.close();
-//        }
-//    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public void postUsuario(Usuario usuario){
+        usuarioRepository.save(usuario);
+    }
+
 }

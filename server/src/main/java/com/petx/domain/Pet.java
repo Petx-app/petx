@@ -1,9 +1,9 @@
 package com.petx.domain;
 
+import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
 
-import javax.persistence.*;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,11 +12,11 @@ import java.util.UUID;
 public class Pet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
 
     @ManyToOne
-    @JoinColumn(name="dono_id")
+    @JoinColumn(name = "id_dono")
     private Usuario dono;
 
     private String nome;

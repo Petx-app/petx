@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -18,22 +17,25 @@ public class ClientController {
 
     @Autowired
     private ServicePet servicePet;
-    ServiceUsuario serviceUsuario = new ServiceUsuario();
 
-//    @PostMapping("/registrar/usuario")
-//    public void postUsuarioController(@RequestBody Usuario usuario) {
-//        serviceUsuario.postUsuario(usuario);
-//    }
-//
-//    @PostMapping("/registrar/pet")
-//    public void postPetController(@RequestBody Pet pet){
-//        servicePet.postPet(pet);
-//    }
+    @Autowired
+    private ServiceUsuario serviceUsuario;
 
-    @GetMapping("/consulta/pet/{id}")
-    public GetQRCodeResponse getPetController(@PathVariable UUID id){
-         GetQRCodeResponse getQRCodeResponse  = servicePet.getQRCode(id);
+    @PostMapping("/cadastrar/usuario")
+    public ResponseEntity postUsuarioController(@RequestBody Usuario usuario) {
+        serviceUsuario.postUsuario(usuario);
+        return ResponseEntity.ok("ok");
+    }
 
-         return getQRCodeResponse;
+    @PostMapping("/cadastrar/pet")
+    public ResponseEntity postPetController(@RequestBody Pet pet) {
+        servicePet.postPet(pet);
+        return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping("/consulta/pet/{uuid}")
+    public GetQRCodeResponse getPetController(@PathVariable UUID uuid) {
+        GetQRCodeResponse getQRCodeResponse = servicePet.getQRCode(uuid);
+        return getQRCodeResponse;
     }
 }

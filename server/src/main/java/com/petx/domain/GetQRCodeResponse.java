@@ -1,4 +1,5 @@
 package com.petx.domain;
+
 import lombok.*;
 
 @Data

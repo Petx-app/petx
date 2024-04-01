@@ -6,12 +6,10 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.petx.repository")
-@EntityScan(basePackages = "com.petx.domain")
 public class PetxApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PetxApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PetxApplication.class, args);
+    }
 
 }
