@@ -1,4 +1,4 @@
-package com.petx.controller;
+package com.petx.api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
