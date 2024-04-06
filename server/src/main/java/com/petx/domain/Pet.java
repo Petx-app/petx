@@ -31,7 +31,7 @@ public class Pet {
 
     private String peso;
 
-    private String sexo;
+    private String genero;
 
     private Boolean cadastrado;
 

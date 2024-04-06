@@ -1,5 +1,7 @@
 package com.petx.service;
 
+import com.petx.api.dto.GetQRCodeResponseDTO;
+import com.petx.api.dto.PetDTO;
 import com.petx.api.exceptions.PetNotCadastro;
 import com.petx.api.exceptions.PetNotFound;
 import com.petx.domain.GetQRCodeResponse;
