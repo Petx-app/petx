@@ -5,5 +5,4 @@ public class PetNotCadastro extends Exception {
     public PetNotCadastro(String mensagem){
         super(mensagem);
     }
-
 }

@@ -25,7 +25,4 @@ public class GetQRCodeResponseMapper {
         dto.setTelefoneDono(getQRCodeResponse.getTelefoneDono());
         return dto;
     }
-
-
-
 }

@@ -1,7 +1,6 @@
 package com.petx.api.dto;
 
-import com.petx.domain.Usuario;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +13,9 @@ public class PetDTO {
 
     private UUID uuid;
 
-    private Usuario dono;
+    private UsuarioDTO dono;
 
+    @NotBlank
     private String nome;
 
     private String especie;

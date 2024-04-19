@@ -10,5 +10,4 @@ public class GetQRCodeResponse {
     String nomeDono;
 
     String telefoneDono;
-
 }
