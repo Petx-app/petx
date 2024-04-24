@@ -20,19 +20,19 @@ public class AdminController {
     private AdminFacade adminFacade;
 
     @PostMapping("/pet/{qtd}")
-    public ResponseEntity postPetAdmin(@PathVariable int qtd) {
+    public ResponseEntity criarQRCode(@PathVariable int qtd) {
         adminFacade.criarQRCode(qtd);
         return ResponseEntity.ok("Total de " + qtd + " registros de pet criado(s)");
     }
 
     @GetMapping("/pets-nao-cadastrados")
-    public ResponseEntity getPetsVazios() {
+    public ResponseEntity buscarPetsNaoCadastrados() {
         List<UUIDRetornoDTO> listUUIDs = adminFacade.buscarPetsNaoCadastrados();
         return ResponseEntity.ok(listUUIDs);
     }
 
     @GetMapping("/autenticar")
-    public ResponseEntity autenticarAdmin(@RequestBody AdminDTO adminDTO) {
+    public ResponseEntity autenticar(@RequestBody AdminDTO adminDTO) {
         AdminDTO dto = adminFacade.autenticar(adminDTO);
         return ResponseEntity.ok(dto);
     }
