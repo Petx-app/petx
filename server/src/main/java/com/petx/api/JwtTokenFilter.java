@@ -12,14 +12,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.petx.service.SecurityUserDetailsService;
+
 import java.io.IOException;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtService;
-    private final com.petx.api.SecurityUserDetailService userDetailService;
+    private final SecurityUserDetailsService userDetailService;
 
-    public JwtTokenFilter(JwtServiceImpl jwtService, com.petx.api.SecurityUserDetailService userDetailService) {
+    public JwtTokenFilter(JwtServiceImpl jwtService, SecurityUserDetailsService userDetailService) {
         this.jwtService = jwtService;
         this.userDetailService = userDetailService;
     }
@@ -35,10 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 String login = jwtService.obterLoginUsuario(token);
                 UserDetails usuarioAutenticado = userDetailService.loadUserByUsername(login);
 
-                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(
-                        usuarioAutenticado,
-                        null,
-                        usuarioAutenticado.getAuthorities());
+                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(usuarioAutenticado, null, usuarioAutenticado.getAuthorities());
 
                 user.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(user);

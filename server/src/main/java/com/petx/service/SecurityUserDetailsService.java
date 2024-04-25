@@ -1,4 +1,4 @@
-package com.petx.api;
+package com.petx.service;
 
 import com.petx.domain.Usuario;
 import com.petx.repository.UsuarioRepository;
@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SecurityUserDetailService implements UserDetailsService {
+public class SecurityUserDetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
-    public SecurityUserDetailService(UsuarioRepository usuarioRepository) {
+    public SecurityUserDetailsService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -21,7 +21,8 @@ public class SecurityUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Usuario usuarioEncontrado = usuarioRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email não encontrado!"));
+                .orElseThrow(() -> new UsernameNotFoundException("Não foi possivel encontrar um usuário pelo email informado. "
+                        + "Email não cadastrado em nossa base de dados."));
 
         return User.builder()
                 .username(usuarioEncontrado.getEmail())
@@ -29,4 +30,5 @@ public class SecurityUserDetailService implements UserDetailsService {
                 .roles("USER")
                 .build();
     }
+
 }

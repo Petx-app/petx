@@ -10,7 +10,7 @@ public class UsuarioDTO {
 
     private Long id;
 
-    @NotBlank
+    @NotNull
     private String email;
 
     @NotBlank

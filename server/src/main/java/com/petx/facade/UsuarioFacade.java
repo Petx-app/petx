@@ -4,6 +4,7 @@ import com.petx.api.dto.LoginUsuarioDTO;
 import com.petx.api.dto.UsuarioDTO;
 import com.petx.domain.Usuario;
 import com.petx.mapper.UsuarioMapper;
+import com.petx.service.JwtServiceImpl;
 import com.petx.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class UsuarioFacade {
 
     @Autowired
     private UsuarioMapper mapper;
+
+    @Autowired
+    private JwtServiceImpl jwtService;
 
     public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
         Usuario usuario = mapper.toEntity(usuarioDTO);
@@ -49,10 +53,12 @@ public class UsuarioFacade {
     public Map<String, Object> autenticar(LoginUsuarioDTO loginUsuarioDTO) {
         Usuario usuario = mapper.toEntityLogin(loginUsuarioDTO);
         Usuario usuarioLogado = service.autenticar(usuario);
+        String token = jwtService.gerarToken(usuarioLogado);
 
         Map<String, Object> usuarioMap = new HashMap<>();
         usuarioMap.put("id", usuarioLogado.getId());
         usuarioMap.put("nome", usuarioLogado.getNome());
+        usuarioMap.put("token", token);
 
         return usuarioMap;
     }

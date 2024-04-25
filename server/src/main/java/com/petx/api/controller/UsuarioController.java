@@ -1,26 +1,18 @@
 package com.petx.api.controller;
 
-import com.petx.api.dto.GetQRCodeResponseDTO;
 import com.petx.api.dto.LoginUsuarioDTO;
-import com.petx.api.dto.PetDTO;
 import com.petx.api.dto.UsuarioDTO;
-import com.petx.api.exceptions.PetNotCadastro;
-import com.petx.facade.PetFacade;
 import com.petx.facade.UsuarioFacade;
-import com.petx.service.PetService;
-import com.petx.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuario")
-public class ClientController {
+public class UsuarioController {
 
     @Autowired
     private UsuarioFacade facade;
@@ -49,7 +41,7 @@ public class ClientController {
         return ResponseEntity.ok("usuario deletado com sucesso");
     }
 
-    @GetMapping("/autenticar")
+    @PostMapping("/autenticar")
     public ResponseEntity<Object> autenticar(@RequestBody @Valid LoginUsuarioDTO loginUsuarioDTO) {
         Map<String, Object> usuarioIDNome = facade.autenticar(loginUsuarioDTO);
         return ResponseEntity.ok(usuarioIDNome);
