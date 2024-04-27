@@ -6,6 +6,7 @@ import com.petx.repository.PetRepository;
 import com.petx.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class UsuarioService {
 
     @Autowired
     private PetRepository petRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public Usuario cadastrar(Usuario usuario) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail().toLowerCase());
@@ -79,7 +83,7 @@ public class UsuarioService {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail());
         if (optionalUsuario.isPresent()) {
             Usuario usuarioBanco = optionalUsuario.get();
-            if (usuarioBanco.getSenha().equals(usuario.getSenha())) {
+            if (passwordEncoder.matches(usuario.getSenha(), usuarioBanco.getSenha())) {
                 return usuarioBanco;
             }
             throw new RuntimeException("Senha Incorreta");

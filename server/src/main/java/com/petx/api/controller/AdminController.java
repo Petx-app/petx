@@ -15,8 +15,6 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    private PetFacade petFacade;
-    @Autowired
     private AdminFacade adminFacade;
 
     @PostMapping("/pet/{qtd}")

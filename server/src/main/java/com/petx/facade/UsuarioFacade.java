@@ -7,6 +7,7 @@ import com.petx.mapper.UsuarioMapper;
 import com.petx.service.JwtServiceImpl;
 import com.petx.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -24,7 +25,14 @@ public class UsuarioFacade {
     @Autowired
     private JwtServiceImpl jwtService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+
     public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
+        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
+        usuarioDTO.setSenha(senhaCriptografada);
+
         Usuario usuario = mapper.toEntity(usuarioDTO);
         Usuario usuarioSalvo = service.cadastrar(usuario);
 

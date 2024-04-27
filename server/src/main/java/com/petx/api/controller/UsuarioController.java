@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -46,6 +47,4 @@ public class UsuarioController {
         Map<String, Object> usuarioIDNome = facade.autenticar(loginUsuarioDTO);
         return ResponseEntity.ok(usuarioIDNome);
     }
-
-
 }
