@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests( (authz) -> authz
                         .requestMatchers("/usuario/autenticar").permitAll()
+                        .requestMatchers("/admin/autenticar").permitAll()
                         .requestMatchers("/usuario").permitAll()
                         .requestMatchers("/qrcode/**").permitAll()
                         .anyRequest().authenticated()

@@ -6,12 +6,15 @@ import com.petx.domain.Admin;
 import com.petx.domain.Pet;
 import com.petx.mapper.AdminMapper;
 import com.petx.service.AdminService;
+import com.petx.service.JwtServiceImpl;
 import com.petx.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class AdminFacade {
@@ -25,12 +28,19 @@ public class AdminFacade {
     @Autowired
     private AdminMapper mapper;
 
-    public AdminDTO autenticar(AdminDTO loginAdminDTO) {
+    @Autowired
+    private JwtServiceImpl jwtService;
+
+    public Map<String, Object> autenticar(AdminDTO loginAdminDTO) {
         Admin admin = mapper.toEntity(loginAdminDTO);
         Admin adminLogado = adminService.autenticar(admin);
-        AdminDTO adminDTO = new AdminDTO();
-        adminDTO.setUsuario(adminLogado.getUsuario());
-        return adminDTO;
+        String token = jwtService.gerarTokenAdmin(adminLogado);
+
+        Map<String, Object> adminMap = new HashMap<>();
+        adminMap.put("usuario", adminLogado.getUsuario());
+        adminMap.put("token", token);
+
+        return adminMap;
     }
 
     public void criarQRCode(int qtd) {

@@ -1,5 +1,6 @@
 package com.petx.service;
 
+import com.petx.domain.Admin;
 import com.petx.domain.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,6 +38,23 @@ public class JwtServiceImpl {
                 .claim("nome", usuario.getNome())
                 .claim("horaExpiracao", dataExpiracaoToken)
                 .claim("userid", usuario.getId())
+                .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
+                .compact();
+    }
+
+    public String gerarTokenAdmin(Admin admin) {
+        long exp = Long.parseLong(expiracao);
+        LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(exp);
+        Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
+        java.util.Date data = Date.from(instant);
+
+        String dataExpiracaoToken = dataHoraExpiracao.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        return Jwts
+                .builder()
+                .setExpiration(data)
+                .setSubject(admin.getUsuario())
+                .claim("horaExpiracao", dataExpiracaoToken)
+                .claim("userid", admin.getId())
                 .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
                 .compact();
     }
