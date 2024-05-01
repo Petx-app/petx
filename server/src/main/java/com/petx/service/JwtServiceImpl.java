@@ -53,6 +53,7 @@ public class JwtServiceImpl {
                 .builder()
                 .setExpiration(data)
                 .setSubject(admin.getUsuario())
+                .claim("usuario", admin.getUsuario())
                 .claim("horaExpiracao", dataExpiracaoToken)
                 .claim("userid", admin.getId())
                 .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
