@@ -19,6 +19,7 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtServiceImpl jwtService;
+
     private final SecurityUserDetailsService userDetailService;
 
     public JwtTokenFilter(JwtServiceImpl jwtService, SecurityUserDetailsService userDetailService) {
@@ -35,12 +36,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String token = authorization.split(" ")[1];
             if (jwtService.isTokenValido(token)) {
                 String login = jwtService.obterLoginUsuario(token);
+
                 UserDetails usuarioAutenticado = userDetailService.loadUserByUsername(login);
+                if(usuarioAutenticado != null){
+                    UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(usuarioAutenticado, null, usuarioAutenticado.getAuthorities());
 
-                UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(usuarioAutenticado, null, usuarioAutenticado.getAuthorities());
+                    user.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                    SecurityContextHolder.getContext().setAuthentication(user);
+                } else {
+                    UserDetails adminAutenticado = userDetailService.loadUserByAdminName(login);
+                    if (adminAutenticado != null) {
+                        UsernamePasswordAuthenticationToken admin = new UsernamePasswordAuthenticationToken(adminAutenticado, null, adminAutenticado.getAuthorities());
 
-                user.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(user);
+                        admin.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                        SecurityContextHolder.getContext().setAuthentication(admin);
+                    }
+                }
             }
         }
         filterChain.doFilter((ServletRequest) httpServletRequest, (ServletResponse) httpServletResponse);
