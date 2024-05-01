@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,12 +22,11 @@ public class PetService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public void cadastrar(Pet novoPet) {
-        UUID petUUID = novoPet.getUuid();
-        Long usuarioID = novoPet.getDono().getId();
+    public void cadastrar(Pet novoPet, Long idDono) {
+        UUID uuid = novoPet.getUuid();
 
-        Optional<Pet> optionalPet = petRepository.findByUuid(petUUID);
-        if (optionalPet.isPresent()) {
+        Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
+        if (optionalPet.isPresent() && !optionalPet.get().getCadastrado()) {
             Pet pet = optionalPet.get();
             pet.setNome(novoPet.getNome());
             pet.setEspecie(novoPet.getEspecie());
@@ -38,7 +38,7 @@ public class PetService {
             pet.setCadastrado(true);
             pet.setDataNascimento(novoPet.getDataNascimento());
 
-            Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioID);
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(idDono);
             if (optionalUsuario.isPresent()) {
                 Usuario usuario = optionalUsuario.get();
                 pet.setDono(usuario);
@@ -51,25 +51,25 @@ public class PetService {
         }
     }
 
-    public List<Pet> buscarTodos(Long id) throws EntityNotFoundException {
-        List<Pet> pets = petRepository.findByDonoId(id);
+    public List<Pet> buscarTodos(Long idDono) throws EntityNotFoundException {
+        List<Pet> pets = petRepository.findByDonoId(idDono);
         if (!pets.isEmpty()) {
             return pets;
         }
         throw new EntityNotFoundException("Nao tem pet cadastrado");
     }
 
-    public Pet buscarUUID(UUID uuid) throws EntityNotFoundException {
+    public Pet buscarUUID(UUID uuid, Long idDono) throws EntityNotFoundException {
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent()) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
             return optionalPet.get();
         }
         throw new EntityNotFoundException("pet nao encontrado");
     }
 
-    public void deletar(UUID uuid) throws EntityNotFoundException {
+    public void deletar(UUID uuid, Long idDono) throws EntityNotFoundException {
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent()) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
             Pet pet = optionalPet.get();
             pet.setDono(null);
             pet.setNome(null);
@@ -87,9 +87,11 @@ public class PetService {
         }
     }
 
-    public void atualizar(Pet atualizarPet, UUID uuid) throws EntityNotFoundException {
+    public void atualizar(Pet atualizarPet, Long idDono) throws EntityNotFoundException {
+        UUID uuid = atualizarPet.getUuid();
+
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent()) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
             Pet pet = optionalPet.get();
             pet.setNome(atualizarPet.getNome());
             pet.setEspecie(atualizarPet.getEspecie());
@@ -101,7 +103,7 @@ public class PetService {
             pet.setDataNascimento(atualizarPet.getDataNascimento());
             petRepository.save(pet);
         } else {
-            throw new EntityNotFoundException("pet nao encontrado para ser deletado");
+            throw new EntityNotFoundException("pet nao encontrado para ser Atualizado");
         }
     }
 }

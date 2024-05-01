@@ -5,6 +5,7 @@ import com.petx.domain.Pet;
 import com.petx.mapper.GetQRCodeResponseMapper;
 import com.petx.mapper.PetMapper;
 import com.petx.service.PetService;
+import com.petx.service.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,18 +26,24 @@ public class PetFacade {
     @Autowired
     private GetQRCodeResponseMapper getQRCodeRespoMapper;
 
-    public void cadastrar(PetDTO petDTO) {
+    @Autowired
+    UserTokenService buscarIdToken;
+
+    public void cadastrar(PetDTO petDTO, String token) {
+        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Pet pet = mapper.toEntity(petDTO);
-        service.cadastrar(pet);
+        service.cadastrar(pet, idDono);
     }
 
-    public PetDTO buscarUUID(UUID uuid) {
-        Pet pet = service.buscarUUID(uuid);
+    public PetDTO buscarUUID(UUID uuid, String token) {
+        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        Pet pet = service.buscarUUID(uuid, idDono);
         return mapper.toDTO(pet);
     }
 
-    public List<PetDTO> buscarTodos(Long id) {
-        List<Pet> pets = service.buscarTodos(id);
+    public List<PetDTO> buscarTodos(String token) {
+        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        List<Pet> pets = service.buscarTodos(idDono);
         List<PetDTO> petDTOs = new ArrayList<>();
 
         for (Pet pet : pets) {
@@ -55,12 +62,14 @@ public class PetFacade {
         return petDTOs;
     }
 
-    public void atualizar(PetDTO petDTO, UUID uuid) {
+    public void atualizar(PetDTO petDTO, String token) {
+        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Pet pet = mapper.toEntity(petDTO);
-        service.atualizar(pet, uuid);
+        service.atualizar(pet, idDono);
     }
 
-    public void deletar(UUID uuid) {
-        service.deletar(uuid);
+    public void deletar(UUID uuid, String token) {
+        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        service.deletar(uuid, idDono);
     }
 }

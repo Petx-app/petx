@@ -19,32 +19,32 @@ public class PetController {
     private PetFacade facade;
 
     @PostMapping
-    public ResponseEntity cadastrar(@RequestBody @Valid PetDTO petDTO) {
-        facade.cadastrar(petDTO);
+    public ResponseEntity cadastrar(@RequestHeader("Authorization") String token, @RequestBody @Valid PetDTO petDTO) {
+        facade.cadastrar(petDTO, token);
         return ResponseEntity.ok("Pet salvo");
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Object> buscarUUID(@PathVariable @Valid UUID uuid) {
-        PetDTO petDTO = facade.buscarUUID(uuid);
+    public ResponseEntity<Object> buscarUUID(@RequestHeader("Authorization") String token, @PathVariable @Valid UUID uuid) {
+        PetDTO petDTO = facade.buscarUUID(uuid, token);
         return ResponseEntity.ok(petDTO);
     }
 
-    @GetMapping("/list/{id}")
-    public ResponseEntity<Object> buscarTodos(@PathVariable Long id) {
-        List<PetDTO> petDTO = facade.buscarTodos(id);
+    @GetMapping("/list")
+    public ResponseEntity<Object> buscarTodos(@RequestHeader("Authorization") String token) {
+        List<PetDTO> petDTO = facade.buscarTodos(token);
         return ResponseEntity.ok(petDTO);
     }
 
-    @PutMapping("/{uuid}")
-    public ResponseEntity atualizar(@RequestBody @Valid PetDTO petDTO, @PathVariable("uuid") UUID uuid) {
-        facade.atualizar(petDTO, uuid);
-        return ResponseEntity.ok("Usuario atualizado");
+    @PutMapping
+    public ResponseEntity atualizar(@RequestHeader("Authorization") String token, @RequestBody @Valid PetDTO petDTO) {
+        facade.atualizar(petDTO, token);
+        return ResponseEntity.ok("Pet atualizado");
     }
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<String> deletar(@PathVariable UUID uuid) {
-        facade.deletar(uuid);
+    public ResponseEntity<String> deletar(@RequestHeader("Authorization") String token, @PathVariable UUID uuid) {
+        facade.deletar(uuid, token);
         return ResponseEntity.ok("Pet deletado com sucesso");
     }
 }

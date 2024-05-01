@@ -1,6 +1,7 @@
 package com.petx.mapper;
 
 import com.petx.api.dto.PetDTO;
+import com.petx.api.dto.UsuarioDTO;
 import com.petx.domain.Pet;
 import com.petx.domain.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;

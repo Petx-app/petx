@@ -5,8 +5,12 @@ import com.petx.api.dto.UsuarioDTO;
 import com.petx.domain.Usuario;
 import com.petx.mapper.UsuarioMapper;
 import com.petx.service.JwtServiceImpl;
+import com.petx.service.UserTokenService;
 import com.petx.service.UsuarioService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +32,8 @@ public class UsuarioFacade {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserTokenService buscarIdToken;
 
     public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
         String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
@@ -43,18 +49,22 @@ public class UsuarioFacade {
         return usuarioMap;
     }
 
-    public UsuarioDTO buscar(Long id) {
+    public UsuarioDTO buscar(String token) {
+        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Usuario usuario = service.buscar(id);
+        usuario.setSenha(null);
         UsuarioDTO usuarioDto = mapper.toDTO(usuario);
         return usuarioDto;
     }
 
-    public void atualizar(UsuarioDTO usuarioDTO, Long id) {
+    public void atualizar(UsuarioDTO usuarioDTO, String token) {
+        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Usuario usuario = mapper.toEntity(usuarioDTO);
         service.atualizar(usuario, id);
     }
 
-    public void deletar(Long id) {
+    public void deletar(String token) {
+        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         service.deletar(id);
     }
 

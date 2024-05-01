@@ -24,21 +24,21 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioIDNome);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> buscar(@PathVariable Long id) {
-        UsuarioDTO usuarioDTO = facade.buscar(id);
+    @GetMapping
+    public ResponseEntity<Object> buscar(@RequestHeader("Authorization") String token) {
+        UsuarioDTO usuarioDTO = facade.buscar(token);
         return ResponseEntity.ok(usuarioDTO);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity atualizar(@RequestBody @Valid UsuarioDTO usuarioDTO, @PathVariable("id") Long id) {
-        facade.atualizar(usuarioDTO, id);
+    @PutMapping
+    public ResponseEntity atualizar(@RequestHeader("Authorization") String token, @RequestBody @Valid UsuarioDTO usuarioDTO) {
+        facade.atualizar(usuarioDTO, token);
         return ResponseEntity.ok("Usuario salvo");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletar(@PathVariable Long id) {
-        facade.deletar(id);
+    @DeleteMapping
+    public ResponseEntity<String> deletar(@RequestHeader("Authorization") String token) {
+        facade.deletar(token);
         return ResponseEntity.ok("usuario deletado com sucesso");
     }
 
