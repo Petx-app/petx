@@ -35,7 +35,13 @@ public class UsuarioFacade {
     @Autowired
     private UserTokenService buscarIdToken;
 
+    @Value("${salt.password}")
+    private String salt;
+
     public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
+
+        usuarioDTO.setSenha(usuarioDTO.getSenha() + salt);
+
         String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
         usuarioDTO.setSenha(senhaCriptografada);
 
@@ -70,6 +76,7 @@ public class UsuarioFacade {
 
     public Map<String, Object> autenticar(LoginUsuarioDTO loginUsuarioDTO) {
         Usuario usuario = mapper.toEntityLogin(loginUsuarioDTO);
+        usuario.setSenha(usuario.getSenha() + salt);
         Usuario usuarioLogado = service.autenticar(usuario);
         String token = jwtService.gerarToken(usuarioLogado);
 
