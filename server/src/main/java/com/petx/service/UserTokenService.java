@@ -26,7 +26,7 @@ public class UserTokenService {
             Long userId = Long.valueOf(claims.get("userid").toString());
             return userId;
         }catch (Exception e) {
-            return null;
+            throw new RuntimeException("erro ao descriptografar chave do usuario ", e);
         }
     }
 }
