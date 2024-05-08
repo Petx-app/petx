@@ -39,13 +39,12 @@ public class UsuarioFacade {
     private String salt;
 
     public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
-
-        usuarioDTO.setSenha(usuarioDTO.getSenha() + salt);
-
-        String senhaCriptografada = passwordEncoder.encode(usuarioDTO.getSenha());
-        usuarioDTO.setSenha(senhaCriptografada);
-
         Usuario usuario = mapper.toEntity(usuarioDTO);
+
+        usuario.setSenha(usuario.getSenha() + salt);
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
+
         Usuario usuarioSalvo = service.cadastrar(usuario);
 
         Map<String, Object> usuarioMap = new HashMap<>();
