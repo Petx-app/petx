@@ -65,6 +65,11 @@ public class UsuarioFacade {
     public void atualizar(UsuarioDTO usuarioDTO, String token) {
         Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Usuario usuario = mapper.toEntity(usuarioDTO);
+
+        usuario.setSenha(usuario.getSenha() + salt);
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
+
         service.atualizar(usuario, id);
     }
 
