@@ -46,7 +46,6 @@ public class UsuarioService {
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
             usuario.setNome(usuarioAtualizar.getNome());
-            usuario.setEmail(usuarioAtualizar.getEmail());
             usuario.setSenha(usuarioAtualizar.getSenha());
             usuario.setTelefone(usuarioAtualizar.getTelefone());
             usuarioRepository.save(usuario);
