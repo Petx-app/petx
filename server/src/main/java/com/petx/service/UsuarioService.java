@@ -33,6 +33,15 @@ public class UsuarioService {
         return usuarioSalvo;
     }
 
+    public Usuario cadastrarGoogle(Usuario usuario) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail().toLowerCase());
+        if(optionalUsuario.isPresent()){
+            throw new RuntimeException("Usuario já existe");
+        }
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        return usuarioSalvo;
+    }
+
     public Usuario buscar(Long id) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
         if (optionalUsuario.isPresent()) {
@@ -86,6 +95,18 @@ public class UsuarioService {
                 return usuarioBanco;
             }
             throw new RuntimeException("Senha Incorreta");
+        }
+        throw new EntityNotFoundException("Usuario nao encontrado");
+    }
+
+    public Usuario autenticarGoogle(Usuario usuario) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail());
+        if (optionalUsuario.isPresent()) {
+            Usuario usuarioBanco = optionalUsuario.get();
+            if (usuario.getEmail().equals(usuarioBanco.getEmail())) {
+                return usuarioBanco;
+            }
+            throw new RuntimeException("Email Incorreto");
         }
         throw new EntityNotFoundException("Usuario nao encontrado");
     }

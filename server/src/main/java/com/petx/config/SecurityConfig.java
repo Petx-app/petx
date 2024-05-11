@@ -73,6 +73,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/autenticar").permitAll()
                         .requestMatchers("/usuario").permitAll()
                         .requestMatchers("/qrcode/**").permitAll()
+                        .requestMatchers("/usuario/autenticar/gmail").permitAll()
+                        .requestMatchers("/usuario/cadastrar/gmail").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

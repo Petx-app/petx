@@ -2,8 +2,10 @@ package com.petx.facade;
 
 import com.petx.api.dto.LoginUsuarioDTO;
 import com.petx.api.dto.UsuarioDTO;
+import com.petx.api.dto.UsuarioLogadoDTO;
 import com.petx.domain.Usuario;
 import com.petx.mapper.UsuarioMapper;
+import com.petx.service.GoogleService;
 import com.petx.service.JwtServiceImpl;
 import com.petx.service.UserTokenService;
 import com.petx.service.UsuarioService;
@@ -24,6 +26,9 @@ public class UsuarioFacade {
     private UsuarioService service;
 
     @Autowired
+    private GoogleService googleService;
+
+    @Autowired
     private UsuarioMapper mapper;
 
     @Autowired
@@ -38,20 +43,36 @@ public class UsuarioFacade {
     @Value("${salt.password}")
     private String salt;
 
-    public Map<String, Object> cadastrar(UsuarioDTO usuarioDTO) {
+    public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) {
         Usuario usuario = mapper.toEntity(usuarioDTO);
 
         usuario.setSenha(usuario.getSenha() + salt);
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(senhaCriptografada);
 
-        Usuario usuarioSalvo = service.cadastrar(usuario);
+        Usuario usuarioCadastrado = service.cadastrar(usuario);
+        String token = jwtService.gerarToken(usuarioCadastrado);
 
-        Map<String, Object> usuarioMap = new HashMap<>();
-        usuarioMap.put("id", usuarioSalvo.getId());
-        usuarioMap.put("nome", usuarioSalvo.getNome());
+        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+        usuarioLogadoDTO.setId(usuarioCadastrado.getId());
+        usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
+        usuarioLogadoDTO.setToken(token);
 
-        return usuarioMap;
+        return usuarioLogadoDTO;
+    }
+
+    public UsuarioLogadoDTO cadastrarGoogle(String tokenGoogle) {
+        Usuario usuario = googleService.cadastrarGoogle(tokenGoogle);
+
+        Usuario usuarioCadastrado = service.cadastrarGoogle(usuario);
+        String token = jwtService.gerarToken(usuarioCadastrado);
+
+        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+        usuarioLogadoDTO.setId(usuarioCadastrado.getId());
+        usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
+        usuarioLogadoDTO.setToken(token);
+
+        return usuarioLogadoDTO;
     }
 
     public UsuarioDTO buscar(String token) {
@@ -59,6 +80,7 @@ public class UsuarioFacade {
         Usuario usuario = service.buscar(id);
         usuario.setSenha(null);
         UsuarioDTO usuarioDto = mapper.toDTO(usuario);
+
         return usuarioDto;
     }
 
@@ -78,17 +100,33 @@ public class UsuarioFacade {
         service.deletar(id);
     }
 
-    public Map<String, Object> autenticar(LoginUsuarioDTO loginUsuarioDTO) {
+    public UsuarioLogadoDTO autenticar(LoginUsuarioDTO loginUsuarioDTO) {
         Usuario usuario = mapper.toEntityLogin(loginUsuarioDTO);
+
         usuario.setSenha(usuario.getSenha() + salt);
+
         Usuario usuarioLogado = service.autenticar(usuario);
         String token = jwtService.gerarToken(usuarioLogado);
 
-        Map<String, Object> usuarioMap = new HashMap<>();
-        usuarioMap.put("id", usuarioLogado.getId());
-        usuarioMap.put("nome", usuarioLogado.getNome());
-        usuarioMap.put("token", token);
+        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+        usuarioLogadoDTO.setId(usuarioLogado.getId());
+        usuarioLogadoDTO.setNome(usuarioLogado.getNome());
+        usuarioLogadoDTO.setToken(token);
 
-        return usuarioMap;
+        return usuarioLogadoDTO;
+    }
+
+    public UsuarioLogadoDTO autenticarGoogle(String tokenGoogle){
+        Usuario usuario = googleService.autenticarGoogle(tokenGoogle);
+
+        Usuario usuarioLogado = service.autenticarGoogle(usuario);
+        String token = jwtService.gerarToken(usuarioLogado);
+
+        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+        usuarioLogadoDTO.setId(usuarioLogado.getId());
+        usuarioLogadoDTO.setNome(usuarioLogado.getNome());
+        usuarioLogadoDTO.setToken(token);
+
+        return usuarioLogadoDTO;
     }
 }

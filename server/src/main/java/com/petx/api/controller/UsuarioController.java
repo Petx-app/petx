@@ -2,6 +2,7 @@ package com.petx.api.controller;
 
 import com.petx.api.dto.LoginUsuarioDTO;
 import com.petx.api.dto.UsuarioDTO;
+import com.petx.api.dto.UsuarioLogadoDTO;
 import com.petx.facade.UsuarioFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,14 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Object> cadastrar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
-        Map<String, Object> UsuarioIDNome = facade.cadastrar(usuarioDTO);
-        return ResponseEntity.ok(UsuarioIDNome);
+        UsuarioLogadoDTO usuarioLogado = facade.cadastrar(usuarioDTO);
+        return ResponseEntity.ok(usuarioLogado);
+    }
+
+    @PostMapping("/cadastrar/gmail")
+    public ResponseEntity<Object> cadastrarGoogle(@RequestBody String tokenGoogle){
+        UsuarioLogadoDTO usuarioLogado = facade.cadastrarGoogle(tokenGoogle);
+        return ResponseEntity.ok(usuarioLogado);
     }
 
     @GetMapping
@@ -44,7 +51,13 @@ public class UsuarioController {
 
     @PostMapping("/autenticar")
     public ResponseEntity<Object> autenticar(@RequestBody @Valid LoginUsuarioDTO loginUsuarioDTO) {
-        Map<String, Object> usuarioIDNome = facade.autenticar(loginUsuarioDTO);
-        return ResponseEntity.ok(usuarioIDNome);
+        UsuarioLogadoDTO usuarioLogado = facade.autenticar(loginUsuarioDTO);
+        return ResponseEntity.ok(usuarioLogado);
+    }
+
+    @PostMapping("/autenticar/gmail")
+    public ResponseEntity<Object> autenticarGmail(@RequestBody String token){
+        UsuarioLogadoDTO usuarioLogado = facade.autenticarGoogle(token);
+        return ResponseEntity.ok(usuarioLogado);
     }
 }
