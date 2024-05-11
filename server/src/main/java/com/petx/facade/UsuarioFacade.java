@@ -9,15 +9,10 @@ import com.petx.service.GoogleService;
 import com.petx.service.JwtServiceImpl;
 import com.petx.service.UserTokenService;
 import com.petx.service.UsuarioService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class UsuarioFacade {
