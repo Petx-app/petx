@@ -1,5 +1,6 @@
-package com.petx.api.dto;
+package com.petx.api.dto.pet;
 
+import com.petx.api.dto.Usuario.UsuarioDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.petx.api.controller;
 
-import com.petx.api.dto.PetDTO;
+import com.petx.api.dto.pet.PetDTO;
 import com.petx.facade.PetFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
