@@ -1,7 +1,7 @@
 package com.petx.api.controller;
 
-import com.petx.api.dto.AdminDTO;
-import com.petx.api.dto.UUIDRetornoDTO;
+import com.petx.api.dto.admin.AdminDTO;
+import com.petx.api.dto.admin.UUIDRetornoDTO;
 import com.petx.facade.AdminFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.petx.service;
+package com.petx.service.usuario;
 
-import com.petx.domain.Usuario;
+import com.petx.domain.usuario.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;

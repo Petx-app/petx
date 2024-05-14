@@ -1,10 +1,10 @@
 package com.petx.facade;
 
-import com.petx.api.dto.GetQRCodeResponseDTO;
+import com.petx.api.dto.pet.GetQRCodeResponseDTO;
 import com.petx.api.exceptions.PetNotCadastro;
-import com.petx.domain.Pet;
-import com.petx.domain.Usuario;
-import com.petx.service.QRCodeService;
+import com.petx.domain.pet.Pet;
+import com.petx.domain.usuario.Usuario;
+import com.petx.service.pet.QRCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

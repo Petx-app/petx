@@ -1,7 +1,7 @@
-package com.petx.service;
+package com.petx.service.security;
 
-import com.petx.domain.Admin;
-import com.petx.domain.Usuario;
+import com.petx.domain.admin.Admin;
+import com.petx.domain.usuario.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

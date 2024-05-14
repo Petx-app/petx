@@ -1,11 +1,11 @@
 package com.petx.facade;
 
-import com.petx.api.dto.PetDTO;
-import com.petx.domain.Pet;
-import com.petx.mapper.GetQRCodeResponseMapper;
-import com.petx.mapper.PetMapper;
-import com.petx.service.PetService;
-import com.petx.service.UserTokenService;
+import com.petx.api.dto.pet.PetDTO;
+import com.petx.domain.pet.Pet;
+import com.petx.mapper.pet.QRCodeMapper;
+import com.petx.mapper.pet.PetMapper;
+import com.petx.service.pet.PetService;
+import com.petx.service.security.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class PetFacade {
     private PetMapper mapper;
 
     @Autowired
-    private GetQRCodeResponseMapper getQRCodeRespoMapper;
+    private QRCodeMapper getQRCodeRespoMapper;
 
     @Autowired
     UserTokenService buscarIdToken;

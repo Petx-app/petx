@@ -1,8 +1,6 @@
-package com.petx.domain;
+package com.petx.domain.usuario;
 
 import jakarta.persistence.*;
-
-
 import lombok.Data;
 
 @Data

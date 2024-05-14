@@ -1,4 +1,4 @@
-package com.petx.api.dto;
+package com.petx.api.dto.admin;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
-package com.petx.api;
+package com.petx.config;
 
-import com.petx.service.JwtServiceImpl;
+import com.petx.service.security.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.petx.service.SecurityUserDetailsService;
+import com.petx.service.security.SecurityUserDetailsService;
 
 import java.io.IOException;
 

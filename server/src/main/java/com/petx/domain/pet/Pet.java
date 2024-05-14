@@ -1,5 +1,6 @@
-package com.petx.domain;
+package com.petx.domain.pet;
 
+import com.petx.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;

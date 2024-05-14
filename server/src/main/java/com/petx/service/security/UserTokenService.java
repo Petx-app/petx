@@ -1,9 +1,8 @@
-package com.petx.service;
+package com.petx.service.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 @Service

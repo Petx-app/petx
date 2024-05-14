@@ -1,6 +1,6 @@
 package com.petx.repository;
 
-import com.petx.domain.Pet;
+import com.petx.domain.pet.Pet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

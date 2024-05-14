@@ -1,7 +1,7 @@
-package com.petx.mapper;
+package com.petx.mapper.admin;
 
-import com.petx.api.dto.AdminDTO;
-import com.petx.domain.Admin;
+import com.petx.api.dto.admin.AdminDTO;
+import com.petx.domain.admin.Admin;
 import org.springframework.stereotype.Component;
 
 @Component

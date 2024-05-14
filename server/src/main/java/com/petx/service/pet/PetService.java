@@ -1,7 +1,7 @@
-package com.petx.service;
+package com.petx.service.pet;
 
-import com.petx.domain.Pet;
-import com.petx.domain.Usuario;
+import com.petx.domain.pet.Pet;
+import com.petx.domain.usuario.Usuario;
 import com.petx.repository.PetRepository;
 import com.petx.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;

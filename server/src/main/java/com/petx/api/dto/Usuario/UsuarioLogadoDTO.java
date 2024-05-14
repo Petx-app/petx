@@ -1,4 +1,4 @@
-package com.petx.api.dto;
+package com.petx.api.dto.Usuario;
 
 import lombok.Data;
 

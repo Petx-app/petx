@@ -1,8 +1,7 @@
 package com.petx.config;
 
-import com.petx.api.JwtTokenFilter;
-import com.petx.service.JwtServiceImpl;
-import com.petx.service.SecurityUserDetailsService;
+import com.petx.service.security.JwtServiceImpl;
+import com.petx.service.security.SecurityUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -70,11 +69,15 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests( (authz) -> authz
                         .requestMatchers("/usuario/autenticar").permitAll()
-                        .requestMatchers("/admin/autenticar").permitAll()
-                        .requestMatchers("/usuario").permitAll()
-                        .requestMatchers("/qrcode/**").permitAll()
+                        .requestMatchers("/validar/email").permitAll()
+                        .requestMatchers("/validar/esquecer-senha").permitAll()
+                        .requestMatchers("/validar/trocar-senha").permitAll()
                         .requestMatchers("/usuario/autenticar/gmail").permitAll()
                         .requestMatchers("/usuario/cadastrar/gmail").permitAll()
+                        .requestMatchers("/usuario").permitAll()
+                        .requestMatchers("/admin/autenticar").permitAll()
+                        .requestMatchers("/qrcode/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

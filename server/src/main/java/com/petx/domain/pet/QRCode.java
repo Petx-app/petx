@@ -1,9 +1,9 @@
-package com.petx.domain;
+package com.petx.domain.pet;
 
 import lombok.*;
 
 @Data
-public class GetQRCodeResponse {
+public class QRCode {
 
     String nomePet;
 

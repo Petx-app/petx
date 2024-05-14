@@ -1,9 +1,9 @@
-package com.petx.mapper;
+package com.petx.mapper.pet;
 
-import com.petx.api.dto.PetDTO;
-import com.petx.api.dto.UsuarioDTO;
-import com.petx.domain.Pet;
-import com.petx.domain.Usuario;
+import com.petx.api.dto.pet.PetDTO;
+import com.petx.domain.pet.Pet;
+import com.petx.domain.usuario.Usuario;
+import com.petx.mapper.usuario.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package com.petx.api.controller;
 
-import com.petx.api.dto.GetQRCodeResponseDTO;
+import com.petx.api.dto.pet.GetQRCodeResponseDTO;
 import com.petx.api.exceptions.PetNotCadastro;
 import com.petx.facade.QRCodeFacade;
 import org.springframework.beans.factory.annotation.Autowired;

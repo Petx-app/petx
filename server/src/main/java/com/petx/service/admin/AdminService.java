@@ -1,7 +1,7 @@
-package com.petx.service;
+package com.petx.service.admin;
 
-import com.petx.domain.Admin;
-import com.petx.domain.Pet;
+import com.petx.domain.admin.Admin;
+import com.petx.domain.pet.Pet;
 import com.petx.repository.AdminRepository;
 import com.petx.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
