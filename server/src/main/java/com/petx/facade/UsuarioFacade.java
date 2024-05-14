@@ -1,17 +1,19 @@
 package com.petx.facade;
 
-import com.petx.api.dto.LoginUsuarioDTO;
-import com.petx.api.dto.UsuarioDTO;
-import com.petx.api.dto.UsuarioLogadoDTO;
-import com.petx.domain.Usuario;
-import com.petx.mapper.UsuarioMapper;
-import com.petx.service.GoogleService;
-import com.petx.service.JwtServiceImpl;
-import com.petx.service.UserTokenService;
-import com.petx.service.UsuarioService;
+import com.petx.api.dto.Usuario.*;
+import com.petx.domain.usuario.EmailValidar;
+import com.petx.domain.usuario.TrocarSenha;
+import com.petx.domain.usuario.Usuario;
+import com.petx.domain.usuario.ValidacaoEmail;
+import com.petx.mapper.usuario.UsuarioMapper;
+import com.petx.service.security.JwtServiceImpl;
+import com.petx.service.security.UserTokenService;
+import com.petx.service.usuario.EmailService;
+import com.petx.service.usuario.GoogleService;
+import com.petx.service.usuario.UsuarioService;
+import com.petx.service.usuario.ValidacaoUsuarioService;
+import com.petx.utils.GerarCodigoVerificacaoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,20 +32,21 @@ public class UsuarioFacade {
     private JwtServiceImpl jwtService;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserTokenService buscarIdToken;
 
-    @Value("${salt.password}")
-    private String salt;
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private GerarCodigoVerificacaoEmail gerarCodigoVerificacaoEmail;
+
+    @Autowired
+    private ValidacaoUsuarioService validacaoUsuarioService;
 
     public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) {
-        Usuario usuario = mapper.toEntity(usuarioDTO);
+        validacaoUsuarioService.validarEmail(usuarioDTO.getEmail(), usuarioDTO.getCodigoVerificacao());
 
-        usuario.setSenha(usuario.getSenha() + salt);
-        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
-        usuario.setSenha(senhaCriptografada);
+        Usuario usuario = mapper.toEntity(usuarioDTO);
 
         Usuario usuarioCadastrado = service.cadastrar(usuario);
         String token = jwtService.gerarToken(usuarioCadastrado);
@@ -80,12 +83,8 @@ public class UsuarioFacade {
     }
 
     public void atualizar(UsuarioDTO usuarioDTO, String token) {
-        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Usuario usuario = mapper.toEntity(usuarioDTO);
-
-        usuario.setSenha(usuario.getSenha() + salt);
-        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
-        usuario.setSenha(senhaCriptografada);
+        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
 
         service.atualizar(usuario, id);
     }
@@ -97,8 +96,6 @@ public class UsuarioFacade {
 
     public UsuarioLogadoDTO autenticar(LoginUsuarioDTO loginUsuarioDTO) {
         Usuario usuario = mapper.toEntityLogin(loginUsuarioDTO);
-
-        usuario.setSenha(usuario.getSenha() + salt);
 
         Usuario usuarioLogado = service.autenticar(usuario);
         String token = jwtService.gerarToken(usuarioLogado);
@@ -113,7 +110,6 @@ public class UsuarioFacade {
 
     public UsuarioLogadoDTO autenticarGoogle(String tokenGoogle){
         Usuario usuario = googleService.autenticarGoogle(tokenGoogle);
-
         Usuario usuarioLogado = service.autenticarGoogle(usuario);
         String token = jwtService.gerarToken(usuarioLogado);
 
@@ -123,5 +119,38 @@ public class UsuarioFacade {
         usuarioLogadoDTO.setToken(token);
 
         return usuarioLogadoDTO;
+    }
+
+    public void validarEmail(EmailDTO emailDTO){
+        EmailValidar email = mapper.toEntityEmail(emailDTO);
+
+        if(validacaoUsuarioService.verificarEmail(email)){
+            ValidacaoEmail validacaoEmail = gerarCodigoVerificacaoEmail.GerarCodigoVerificacaoEmail(email.getEmail());
+            emailService.validarEmail(validacaoEmail);
+            validacaoUsuarioService.cadastrarEmailValidacao(validacaoEmail);
+        } else{
+            throw new RuntimeException("usuario já existe");
+        }
+    }
+
+    public void esqueceuSenha(EmailDTO emailDTO){
+        EmailValidar email = mapper.toEntityEmail(emailDTO);
+
+        if(!validacaoUsuarioService.verificarEmail(email)){
+            ValidacaoEmail validacaoEmail = gerarCodigoVerificacaoEmail.GerarCodigoVerificacaoEmail(email.getEmail());
+            emailService.esqueceuSenha(validacaoEmail);
+            validacaoUsuarioService.cadastrarEmailValidacao(validacaoEmail);
+        } else{
+            throw new RuntimeException("usuario nao existe, primeiro cadastre");
+        }
+    }
+
+    public void trocarSenha(TrocarSenhaDTO trocarSenhaDTO){
+        TrocarSenha trocarSenha  = mapper.toEntityTrocarSenha(trocarSenhaDTO);
+
+        if(validacaoUsuarioService.validarEmail(trocarSenha.getEmail(), trocarSenha.getCodigo())){
+            validacaoUsuarioService.trocarSenha(trocarSenha);
+        }
+
     }
 }

@@ -1,8 +1,6 @@
 package com.petx.api.controller;
 
-import com.petx.api.dto.LoginUsuarioDTO;
-import com.petx.api.dto.UsuarioDTO;
-import com.petx.api.dto.UsuarioLogadoDTO;
+import com.petx.api.dto.Usuario.*;
 import com.petx.facade.UsuarioFacade;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +55,23 @@ public class UsuarioController {
     public ResponseEntity<Object> autenticarGmail(@RequestBody String token){
         UsuarioLogadoDTO usuarioLogado = facade.autenticarGoogle(token);
         return ResponseEntity.ok(usuarioLogado);
+    }
+
+    @PostMapping("/validar/email")
+    public ResponseEntity<Object> validarEmail(@RequestBody @Valid EmailDTO emailDTO) {
+        facade.validarEmail(emailDTO);
+        return ResponseEntity.ok("email enviado");
+    }
+
+    @PostMapping("/esquecer-senha")
+    public ResponseEntity<Object> esqueceuSenha(@RequestBody @Valid EmailDTO emailDTO) {
+        facade.esqueceuSenha(emailDTO);
+        return ResponseEntity.ok("email enviado");
+    }
+
+    @PutMapping("/trocar-senha")
+    public ResponseEntity<Object> trocarSenha(@RequestBody @Valid TrocarSenhaDTO trocarSenhaDTO) {
+        facade.trocarSenha(trocarSenhaDTO);
+        return ResponseEntity.ok("senha trocada");
     }
 }

@@ -1,8 +1,6 @@
-package com.petx.api.dto;
+package com.petx.api.dto.Usuario;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -10,6 +8,9 @@ public class UsuarioDTO {
 
     private Long id;
 
+    private String codigoVerificacao;
+
+    @NotBlank
     @NotNull
     private String email;
 

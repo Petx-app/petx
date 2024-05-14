@@ -1,9 +1,11 @@
-package com.petx.service;
+package com.petx.service.usuario;
 
-import com.petx.domain.Pet;
-import com.petx.domain.Usuario;
+import com.petx.domain.pet.Pet;
+import com.petx.domain.usuario.Usuario;
+import com.petx.domain.usuario.ValidacaoEmail;
 import com.petx.repository.PetRepository;
 import com.petx.repository.UsuarioRepository;
+import com.petx.repository.ValidacaoUsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,12 +26,19 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ValidacaoUsuarioRepository validacaoUsuarioRepository;
+
     public Usuario cadastrar(Usuario usuario) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail().toLowerCase());
         if (optionalUsuario.isPresent()) {
             throw new RuntimeException("Usuario já existe");
         }
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(usuario.getEmail());
+        if(optionalValidacaoEmail.isPresent()) {
+            validacaoUsuarioRepository.deleteById(optionalValidacaoEmail.get().getId());
+        }
         return usuarioSalvo;
     }
 
