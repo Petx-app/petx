@@ -1,6 +1,5 @@
 package com.petx.mapper.usuario;
 
-
 import com.petx.api.dto.Usuario.EmailDTO;
 import com.petx.api.dto.Usuario.LoginUsuarioDTO;
 import com.petx.api.dto.Usuario.TrocarSenhaDTO;
@@ -22,6 +21,7 @@ public class UsuarioMapper {
         Usuario entity = new Usuario();
         entity.setEmail(dto.getEmail());
         entity.setSenha(criptografia.getSenhaSalto(dto.getSenha()));
+
         return entity;
     }
 
@@ -32,6 +32,7 @@ public class UsuarioMapper {
         entity.setSenha(criptografia.criptogafarSenha(dto.getSenha()));
         entity.setNome(dto.getNome());
         entity.setTelefone(dto.getTelefone());
+
         return entity;
     }
 
@@ -45,6 +46,7 @@ public class UsuarioMapper {
         dto.setSenha(null);
         dto.setNome(usuario.getNome());
         dto.setTelefone(usuario.getTelefone());
+
         return dto;
     }
 

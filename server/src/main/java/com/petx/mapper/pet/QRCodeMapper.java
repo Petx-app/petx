@@ -12,6 +12,7 @@ public class QRCodeMapper {
         entity.setNomePet(dto.getNomePet());
         entity.setNomeDono(dto.getNomeDono());
         entity.setTelefoneDono(dto.getTelefoneDono());
+
         return entity;
     }
 
@@ -23,6 +24,7 @@ public class QRCodeMapper {
         dto.setNomePet(QRCode.getNomePet());
         dto.setNomeDono(QRCode.getNomeDono());
         dto.setTelefoneDono(QRCode.getTelefoneDono());
+
         return dto;
     }
 }

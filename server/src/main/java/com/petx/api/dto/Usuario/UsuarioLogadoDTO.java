@@ -6,6 +6,8 @@ import lombok.Data;
 public class UsuarioLogadoDTO {
 
     private Long id;
+
     private String nome;
+
     private String token;
 }

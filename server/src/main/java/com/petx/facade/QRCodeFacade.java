@@ -7,7 +7,6 @@ import com.petx.domain.usuario.Usuario;
 import com.petx.service.pet.QRCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
 @Component

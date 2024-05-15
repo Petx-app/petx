@@ -7,7 +7,6 @@ import com.petx.mapper.usuario.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class PetMapper {
 
@@ -33,6 +32,7 @@ public class PetMapper {
         entity.setGenero(dto.getGenero());
         entity.setCadastrado(dto.getCadastrado());
         entity.setDataNascimento(dto.getDataNascimento());
+
         return entity;
     }
 
@@ -50,6 +50,7 @@ public class PetMapper {
         dto.setGenero(pet.getGenero());
         dto.setCadastrado(pet.getCadastrado());
         dto.setDataNascimento(pet.getDataNascimento());
+
         return dto;
     }
 }

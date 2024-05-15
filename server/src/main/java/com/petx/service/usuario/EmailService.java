@@ -69,5 +69,4 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar email", e);
         }
     }
-
 }

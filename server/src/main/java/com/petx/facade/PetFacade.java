@@ -8,11 +8,9 @@ import com.petx.service.pet.PetService;
 import com.petx.service.security.UserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 
 @Component
 public class PetFacade {
