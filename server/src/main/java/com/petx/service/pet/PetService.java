@@ -37,6 +37,7 @@ public class PetService {
             pet.setGenero(novoPet.getGenero());
             pet.setCadastrado(true);
             pet.setDataNascimento(novoPet.getDataNascimento());
+            pet.setDataCadastro(novoPet.getDataCadastro());
 
             Optional<Usuario> optionalUsuario = usuarioRepository.findById(idDono);
             if (optionalUsuario.isPresent()) {
@@ -101,6 +102,7 @@ public class PetService {
             pet.setPeso(atualizarPet.getPeso());
             pet.setGenero(atualizarPet.getGenero());
             pet.setDataNascimento(atualizarPet.getDataNascimento());
+            pet.setDataCadastro(atualizarPet.getDataCadastro());
             petRepository.save(pet);
         } else {
             throw new EntityNotFoundException("pet nao encontrado para ser Atualizado");
