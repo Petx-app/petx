@@ -10,6 +10,7 @@ import com.petx.domain.usuario.Usuario;
 import com.petx.utils.Criptografia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 @Component
 public class UsuarioMapper {
@@ -52,15 +53,14 @@ public class UsuarioMapper {
 
     public EmailValidar toEntityEmail(EmailDTO dto){
         EmailValidar entity = new EmailValidar();
-        entity.setEmail(dto.getEmail());
+        entity.setEmail(dto.getEmail().toLowerCase());
 
         return entity;
     }
 
-    public TrocarSenha toEntityTrocarSenha(TrocarSenhaDTO dto){
+    public TrocarSenha toEntityTrocarSenha(TrocarSenhaDTO dto, UUID codigoValidacao){
         TrocarSenha entity = new TrocarSenha();
-        entity.setCodigo(dto.getCodigo());
-        entity.setEmail(dto.getEmail());
+        entity.setCodigoValidacao(codigoValidacao);
         entity.setSenha(criptografia.criptogafarSenha(dto.getSenha()));
 
         return entity;
