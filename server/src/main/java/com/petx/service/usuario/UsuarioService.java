@@ -29,7 +29,7 @@ public class UsuarioService {
     private ValidacaoUsuarioRepository validacaoUsuarioRepository;
 
     public Usuario cadastrar(Usuario usuario) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail().toLowerCase());
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail());
         if (optionalUsuario.isPresent()) {
             throw new RuntimeException("Usuario já existe");
         }
