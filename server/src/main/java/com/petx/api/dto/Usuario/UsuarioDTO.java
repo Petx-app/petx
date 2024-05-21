@@ -8,6 +8,9 @@ public class UsuarioDTO {
 
     private Long id;
 
+    @NotBlank
+    @NotNull
+    @Size(min = 4, max = 4)
     private String codigoVerificacao;
 
     @NotBlank
