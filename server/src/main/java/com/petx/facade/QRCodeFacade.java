@@ -1,6 +1,6 @@
 package com.petx.facade;
 
-import com.petx.api.dto.pet.GetQRCodeResponseDTO;
+import com.petx.api.dto.pet.QRCodeDTO;
 import com.petx.api.exceptions.PetNotCadastro;
 import com.petx.domain.pet.Pet;
 import com.petx.domain.usuario.Usuario;
@@ -15,14 +15,14 @@ public class QRCodeFacade {
     @Autowired
     private QRCodeService service;
 
-    public GetQRCodeResponseDTO buscarQRCode(UUID uuid) throws PetNotCadastro {
+    public QRCodeDTO buscarQRCode(UUID uuid) throws PetNotCadastro {
         Pet pet = service.buscarQRCode(uuid);
-        GetQRCodeResponseDTO getQRCodeResponseDTO = new GetQRCodeResponseDTO();
-        getQRCodeResponseDTO.setNomePet(pet.getNome());
+        QRCodeDTO QRCodeDTO = new QRCodeDTO();
+        QRCodeDTO.setNomePet(pet.getNome());
 
         Usuario usuario = pet.getDono();
-        getQRCodeResponseDTO.setTelefoneDono(usuario.getTelefone());
-        getQRCodeResponseDTO.setNomeDono(usuario.getNome());
-        return getQRCodeResponseDTO;
+        QRCodeDTO.setTelefoneDono(usuario.getTelefone());
+        QRCodeDTO.setNomeDono(usuario.getNome());
+        return QRCodeDTO;
     }
 }

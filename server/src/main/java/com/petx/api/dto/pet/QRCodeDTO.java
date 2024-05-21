@@ -3,7 +3,7 @@ package com.petx.api.dto.pet;
 import lombok.Data;
 
 @Data
-public class GetQRCodeResponseDTO {
+public class QRCodeDTO {
 
     String nomePet;
 
