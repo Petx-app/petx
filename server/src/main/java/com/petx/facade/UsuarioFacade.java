@@ -15,6 +15,7 @@ import com.petx.service.usuario.ValidacaoUsuarioService;
 import com.petx.utils.GerarCodigoVerificacaoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 @Component
 public class UsuarioFacade {
@@ -38,13 +39,13 @@ public class UsuarioFacade {
     private EmailService emailService;
 
     @Autowired
-    private GerarCodigoVerificacaoEmail gerarCodigoVerificacaoEmail;
+    private GerarCodigoVerificacaoEmail gerarCodigo;
 
     @Autowired
     private ValidacaoUsuarioService validacaoUsuarioService;
 
     public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) {
-        validacaoUsuarioService.validarEmail(usuarioDTO.getEmail(), usuarioDTO.getCodigoVerificacao());
+        validacaoUsuarioService.validarEmail(usuarioDTO.getEmail().toLowerCase(), usuarioDTO.getCodigoVerificacao());
 
         Usuario usuario = mapper.toEntity(usuarioDTO);
 
@@ -125,7 +126,7 @@ public class UsuarioFacade {
         EmailValidar email = mapper.toEntityEmail(emailDTO);
 
         if(validacaoUsuarioService.verificarEmail(email)){
-            ValidacaoEmail validacaoEmail = gerarCodigoVerificacaoEmail.GerarCodigoVerificacaoEmail(email.getEmail());
+            ValidacaoEmail validacaoEmail = gerarCodigo.gerarCodigoVerificacaoEmail(email.getEmail());
             emailService.validarEmail(validacaoEmail);
             validacaoUsuarioService.cadastrarEmailValidacao(validacaoEmail);
         } else{
@@ -137,20 +138,15 @@ public class UsuarioFacade {
         EmailValidar email = mapper.toEntityEmail(emailDTO);
 
         if(!validacaoUsuarioService.verificarEmail(email)){
-            ValidacaoEmail validacaoEmail = gerarCodigoVerificacaoEmail.GerarCodigoVerificacaoEmail(email.getEmail());
-            emailService.esqueceuSenha(validacaoEmail);
-            validacaoUsuarioService.cadastrarEmailValidacao(validacaoEmail);
+            UUID codigo = validacaoUsuarioService.gerarCodigoTrocarSenha(email);
+            emailService.esqueceuSenha(email, codigo);
         } else{
             throw new RuntimeException("usuario nao existe, primeiro cadastre");
         }
     }
 
-    public void trocarSenha(TrocarSenhaDTO trocarSenhaDTO){
-        TrocarSenha trocarSenha  = mapper.toEntityTrocarSenha(trocarSenhaDTO);
-
-        if(validacaoUsuarioService.validarEmail(trocarSenha.getEmail(), trocarSenha.getCodigo())){
-            validacaoUsuarioService.trocarSenha(trocarSenha);
-        }
-
+    public void trocarSenha(TrocarSenhaDTO senha, UUID codigoValidacao){
+        TrocarSenha senhaNova  = mapper.toEntityTrocarSenha(senha, codigoValidacao);
+        validacaoUsuarioService.trocarSenha(senhaNova);
     }
 }
