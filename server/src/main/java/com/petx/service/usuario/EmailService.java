@@ -1,5 +1,6 @@
 package com.petx.service.usuario;
 
+import com.petx.domain.usuario.EmailValidar;
 import com.petx.domain.usuario.ValidacaoEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
+import java.util.UUID;
 
 @Service
 public class EmailService {
@@ -54,15 +56,18 @@ public class EmailService {
         }
     }
 
-    public void esqueceuSenha(ValidacaoEmail validacaoEmail){
+    public void esqueceuSenha(EmailValidar email, UUID codigoValidcao){
+
+        String link = "http://localhost:8080/usuario/validar/trocar-senha/";
+
         try {
             Session session = configureSession();
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(validacaoEmail.getEmail()));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getEmail()));
             message.setSubject("Recuperação de Senha Petx");
-            message.setText("Código de recuperação de senha: " + validacaoEmail.getCodigo());
+            message.setText("Link de acesso para trocar senha: \n\n" + link + codigoValidcao);
 
             Transport.send(message);
         } catch (Exception e) {
