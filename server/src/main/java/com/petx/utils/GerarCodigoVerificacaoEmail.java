@@ -8,19 +8,14 @@ import java.util.Random;
 @Component
 public class GerarCodigoVerificacaoEmail {
 
-    @Autowired
-    private GerarHoraAtual gerarHoraAtual;
-
-    private static final String characteres = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
+    private static final String caracteres = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
     private static final int length = 4;
 
-    public ValidacaoEmail GerarCodigoVerificacaoEmail(String email){
-        int horaAtual = gerarHoraAtual.horaAtual();
+    public ValidacaoEmail gerarCodigoVerificacaoEmail(String email){
         String codigoValidacao = gerarCodigo();
 
         ValidacaoEmail validacaoEmail = new ValidacaoEmail();
         validacaoEmail.setCodigo(codigoValidacao);
-        validacaoEmail.setHoraInserida(horaAtual);
         validacaoEmail.setEmail(email.toLowerCase());
 
         return validacaoEmail;
@@ -31,8 +26,8 @@ public class GerarCodigoVerificacaoEmail {
         StringBuilder sb = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characteres.length());
-            sb.append(characteres.charAt(index));
+            int index = random.nextInt(caracteres.length());
+            sb.append(caracteres.charAt(index));
         }
 
         return sb.toString();
