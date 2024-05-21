@@ -35,9 +35,14 @@ public class Pet {
 
     private Boolean cadastrado;
 
-    @Column(name = "data_nascimento")
     private Date dataNascimento;
 
-    @Column(name = "data_cadastro", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date dataCadastro;
+
+    private Date dataInclusao;
+
+    @PrePersist
+    protected void onCreate() {
+        dataInclusao = new Date();
+    }
 }

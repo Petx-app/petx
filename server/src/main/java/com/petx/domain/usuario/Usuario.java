@@ -2,6 +2,7 @@ package com.petx.domain.usuario;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,4 +19,11 @@ public class Usuario {
     private String nome;
 
     private String telefone;
+
+    private LocalDateTime dtInclusao;
+
+    @PrePersist
+    protected void onCreate() {
+        this.dtInclusao = LocalDateTime.now();
+    }
 }
