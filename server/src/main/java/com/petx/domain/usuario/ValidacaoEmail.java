@@ -1,10 +1,8 @@
 package com.petx.domain.usuario;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,5 +16,10 @@ public class ValidacaoEmail {
 
     private String codigo;
 
-    private int horaInserida;
+    private LocalDateTime horaInserida;
+
+    @PrePersist
+    protected void onCreate() {
+        this.horaInserida = LocalDateTime.now();
+    }
 }
