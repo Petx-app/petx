@@ -1,13 +1,12 @@
 package com.petx.domain.usuario;
 
 import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class TrocarSenha {
 
-    private String codigo;
-
-    private String email;
+    private UUID codigoValidacao;
 
     private String senha;
 }
