@@ -22,7 +22,7 @@ public class PetService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public void cadastrar(Pet novoPet, Long idDono) {
+    public void cadastrar(Pet novoPet, UUID uuidDono) {
         UUID uuid = novoPet.getUuid();
 
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
@@ -39,7 +39,7 @@ public class PetService {
             pet.setDataNascimento(novoPet.getDataNascimento());
             pet.setDataCadastro(novoPet.getDataCadastro());
 
-            Optional<Usuario> optionalUsuario = usuarioRepository.findById(idDono);
+            Optional<Usuario> optionalUsuario = usuarioRepository.findByUuid(uuidDono);
             if (optionalUsuario.isPresent()) {
                 Usuario usuario = optionalUsuario.get();
                 pet.setDono(usuario);
@@ -52,25 +52,25 @@ public class PetService {
         }
     }
 
-    public List<Pet> buscarTodos(Long idDono) throws EntityNotFoundException {
-        List<Pet> pets = petRepository.findByDonoId(idDono);
+    public List<Pet> buscarTodos(UUID uuidDono) throws EntityNotFoundException {
+        List<Pet> pets = petRepository.findByDonoUuid(uuidDono);
         if (!pets.isEmpty()) {
             return pets;
         }
         throw new EntityNotFoundException("Nao tem pet cadastrado");
     }
 
-    public Pet buscarUUID(UUID uuid, Long idDono) throws EntityNotFoundException {
+    public Pet buscarUUID(UUID uuid, UUID uuidDono) throws EntityNotFoundException {
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getUuid(), uuidDono))) {
             return optionalPet.get();
         }
         throw new EntityNotFoundException("pet nao encontrado");
     }
 
-    public void deletar(UUID uuid, Long idDono) throws EntityNotFoundException {
+    public void deletar(UUID uuid, UUID uuidDono) throws EntityNotFoundException {
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getUuid(), uuidDono))) {
             Pet pet = optionalPet.get();
             pet.setDono(null);
             pet.setNome(null);
@@ -88,11 +88,11 @@ public class PetService {
         }
     }
 
-    public void atualizar(Pet atualizarPet, Long idDono) throws EntityNotFoundException {
+    public void atualizar(Pet atualizarPet, UUID uuidDono) throws EntityNotFoundException {
         UUID uuid = atualizarPet.getUuid();
 
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
-        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getId(), idDono))) {
+        if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getUuid(), uuidDono))) {
             Pet pet = optionalPet.get();
             pet.setNome(atualizarPet.getNome());
             pet.setEspecie(atualizarPet.getEspecie());

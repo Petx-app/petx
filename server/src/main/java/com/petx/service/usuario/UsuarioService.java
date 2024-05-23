@@ -6,12 +6,14 @@ import com.petx.domain.usuario.ValidacaoEmail;
 import com.petx.repository.PetRepository;
 import com.petx.repository.UsuarioRepository;
 import com.petx.repository.ValidacaoUsuarioRepository;
+import com.petx.utils.Criptografia;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -24,6 +26,9 @@ public class UsuarioService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    Criptografia criptografia;
 
     @Autowired
     private ValidacaoUsuarioRepository validacaoUsuarioRepository;
@@ -50,16 +55,16 @@ public class UsuarioService {
         return usuarioSalvo;
     }
 
-    public Usuario buscar(Long id) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
+    public Usuario buscar(UUID uuid) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(uuid);
         if (optionalUsuario.isPresent()) {
             return optionalUsuario.get();
         }
-        throw new EntityNotFoundException("Usuário com ID " + id + " não encontrado.");
+        throw new EntityNotFoundException("Usuário com ID " + uuid + " não encontrado.");
     }
 
-    public void atualizar(Usuario usuarioAtualizar, Long id) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
+    public void atualizar(Usuario usuarioAtualizar, UUID uuid) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(uuid);
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
             usuario.setNome(usuarioAtualizar.getNome());
@@ -71,11 +76,11 @@ public class UsuarioService {
         }
     }
 
-    public void deletar(Long id) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
+    public void deletar(UUID uuid) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(uuid);
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
-            List<Pet> pets = petRepository.findByDonoId(usuario.getId());
+            List<Pet> pets = petRepository.findByDonoUuid(usuario.getUuid());
             for (Pet pet : pets) {
                 pet.setDono(null);
                 pet.setNome(null);
@@ -91,7 +96,7 @@ public class UsuarioService {
             }
             usuarioRepository.delete(usuario);
         } else {
-            throw new EntityNotFoundException("erro: Usuário com ID " + id + " não encontrado. Não é possível deletar.");
+            throw new EntityNotFoundException("erro: Usuário com ID " + uuid + " não encontrado. Não é possível deletar.");
         }
     }
 
@@ -99,6 +104,8 @@ public class UsuarioService {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail());
         if (optionalUsuario.isPresent()) {
             Usuario usuarioBanco = optionalUsuario.get();
+            usuario.setSenha(criptografia.getSenhaSalto(usuario.getSenha(), usuarioBanco.getUuid()));
+
             if (passwordEncoder.matches(usuario.getSenha(), usuarioBanco.getSenha())) {
                 return usuarioBanco;
             }

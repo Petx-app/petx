@@ -21,16 +21,16 @@ public class UsuarioMapper {
     public Usuario toEntityLogin(LoginUsuarioDTO dto) {
         Usuario entity = new Usuario();
         entity.setEmail(dto.getEmail());
-        entity.setSenha(criptografia.getSenhaSalto(dto.getSenha()));
+        entity.setSenha(dto.getSenha());
 
         return entity;
     }
 
     public Usuario toEntity(UsuarioDTO dto) {
         Usuario entity = new Usuario();
-        entity.setId(dto.getId());
+        entity.setUuid(UUID.randomUUID());
         entity.setEmail(dto.getEmail().toLowerCase());
-        entity.setSenha(criptografia.criptogafarSenha(dto.getSenha()));
+        entity.setSenha(criptografia.criptogafarSenha(dto.getSenha(), entity.getUuid()));
         entity.setNome(dto.getNome());
         entity.setTelefone(dto.getTelefone());
 
@@ -42,7 +42,6 @@ public class UsuarioMapper {
             return null;
         }
         UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
         dto.setEmail(usuario.getEmail());
         dto.setSenha(null);
         dto.setNome(usuario.getNome());
@@ -61,7 +60,7 @@ public class UsuarioMapper {
     public TrocarSenha toEntityTrocarSenha(TrocarSenhaDTO dto, UUID codigoValidacao){
         TrocarSenha entity = new TrocarSenha();
         entity.setCodigoValidacao(codigoValidacao);
-        entity.setSenha(criptografia.criptogafarSenha(dto.getSenha()));
+        entity.setSenha(dto.getSenha());
 
         return entity;
     }

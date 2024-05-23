@@ -13,7 +13,7 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
 
     Optional<Pet> findByUuid(UUID uuid);
 
-    List<Pet> findByDonoId(Long id);
+    List<Pet> findByDonoUuid(UUID uuid);
 
     List<Pet> findByCadastrado(boolean cadastrado);
 }

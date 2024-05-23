@@ -4,6 +4,7 @@ import com.petx.domain.usuario.*;
 import com.petx.repository.UsuarioRepository;
 import com.petx.repository.ValidacaoSenhaRepository;
 import com.petx.repository.ValidacaoUsuarioRepository;
+import com.petx.utils.Criptografia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -22,6 +23,9 @@ public class ValidacaoUsuarioService {
 
     @Autowired
     private ValidacaoSenhaRepository validacaoSenhaRepository;
+
+    @Autowired
+    Criptografia criptografia;
 
     public boolean verificarEmail(EmailValidar email) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email.getEmail().toLowerCase());
@@ -76,10 +80,10 @@ public class ValidacaoUsuarioService {
 
             if(validacaoSenha.getHoraInserida().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
                     && ChronoUnit.MINUTES.between(validacaoSenha.getHoraInserida(), LocalDateTime.now()) <= 5) {
-                Optional<Usuario> optionalUsuario = usuarioRepository.findById(validacaoSenha.getUsuario().getId());
+                Optional<Usuario> optionalUsuario = usuarioRepository.findById(validacaoSenha.getUsuario().getUuid());
                 if (optionalUsuario.isPresent()) {
                     Usuario usuario = optionalUsuario.get();
-                    usuario.setSenha(senhaNova.getSenha());
+                    usuario.setSenha(criptografia.criptogafarSenha(senhaNova.getSenha(), usuario.getUuid()));
                     usuarioRepository.save(usuario);
                     validacaoSenhaRepository.deleteById(validacaoSenha.getId());
                 }

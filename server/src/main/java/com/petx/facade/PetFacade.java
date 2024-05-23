@@ -28,20 +28,20 @@ public class PetFacade {
     UserTokenService buscarIdToken;
 
     public void cadastrar(PetDTO petDTO, String token) {
-        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Pet pet = mapper.toEntity(petDTO);
-        service.cadastrar(pet, idDono);
+        service.cadastrar(pet, uuidDono);
     }
 
     public PetDTO buscarUUID(UUID uuid, String token) {
-        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
-        Pet pet = service.buscarUUID(uuid, idDono);
+        UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        Pet pet = service.buscarUUID(uuid, uuidDono);
         return mapper.toDTO(pet);
     }
 
     public List<PetDTO> buscarTodos(String token) {
-        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
-        List<Pet> pets = service.buscarTodos(idDono);
+        UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        List<Pet> pets = service.buscarTodos(uuidDono);
         List<PetDTO> petDTOs = new ArrayList<>();
 
         for (Pet pet : pets) {
@@ -61,13 +61,13 @@ public class PetFacade {
     }
 
     public void atualizar(PetDTO petDTO, String token) {
-        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         Pet pet = mapper.toEntity(petDTO);
-        service.atualizar(pet, idDono);
+        service.atualizar(pet, uuidDono);
     }
 
     public void deletar(UUID uuid, String token) {
-        Long idDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
-        service.deletar(uuid, idDono);
+        UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        service.deletar(uuid, uuidDono);
     }
 }

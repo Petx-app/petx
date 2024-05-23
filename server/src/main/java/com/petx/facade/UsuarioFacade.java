@@ -53,7 +53,6 @@ public class UsuarioFacade {
         String token = jwtService.gerarToken(usuarioCadastrado);
 
         UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setId(usuarioCadastrado.getId());
         usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
         usuarioLogadoDTO.setToken(token);
 
@@ -67,7 +66,6 @@ public class UsuarioFacade {
         String token = jwtService.gerarToken(usuarioCadastrado);
 
         UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setId(usuarioCadastrado.getId());
         usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
         usuarioLogadoDTO.setToken(token);
 
@@ -75,8 +73,8 @@ public class UsuarioFacade {
     }
 
     public UsuarioDTO buscar(String token) {
-        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
-        Usuario usuario = service.buscar(id);
+        UUID uuid = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        Usuario usuario = service.buscar(uuid);
         usuario.setSenha(null);
         UsuarioDTO usuarioDto = mapper.toDTO(usuario);
 
@@ -85,14 +83,14 @@ public class UsuarioFacade {
 
     public void atualizar(UsuarioDTO usuarioDTO, String token) {
         Usuario usuario = mapper.toEntity(usuarioDTO);
-        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        UUID uuid = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
 
-        service.atualizar(usuario, id);
+        service.atualizar(usuario, uuid);
     }
 
     public void deletar(String token) {
-        Long id = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
-        service.deletar(id);
+        UUID uuid = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        service.deletar(uuid);
     }
 
     public UsuarioLogadoDTO autenticar(LoginUsuarioDTO loginUsuarioDTO) {
@@ -102,7 +100,6 @@ public class UsuarioFacade {
         String token = jwtService.gerarToken(usuarioLogado);
 
         UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setId(usuarioLogado.getId());
         usuarioLogadoDTO.setNome(usuarioLogado.getNome());
         usuarioLogadoDTO.setToken(token);
 
@@ -115,7 +112,6 @@ public class UsuarioFacade {
         String token = jwtService.gerarToken(usuarioLogado);
 
         UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setId(usuarioLogado.getId());
         usuarioLogadoDTO.setNome(usuarioLogado.getNome());
         usuarioLogadoDTO.setToken(token);
 

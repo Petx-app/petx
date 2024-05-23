@@ -37,7 +37,7 @@ public class JwtServiceImpl {
                 .setSubject(usuario.getEmail())
                 .claim("nome", usuario.getNome())
                 .claim("horaExpiracao", dataExpiracaoToken)
-                .claim("userid", usuario.getId())
+                .claim("userUuid", usuario.getUuid())
                 .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
                 .compact();
     }

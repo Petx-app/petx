@@ -2,11 +2,12 @@ package com.petx.api.dto.Usuario;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class UsuarioDTO {
 
-    private Long id;
+    private UUID uuid;
 
     @NotBlank
     @NotNull

@@ -69,9 +69,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests( (authz) -> authz
                         .requestMatchers("/usuario/autenticar").permitAll()
-                        .requestMatchers("/validar/email").permitAll()
-                        .requestMatchers("/validar/esquecer-senha").permitAll()
-                        .requestMatchers("/validar/trocar-senha").permitAll()
+                        .requestMatchers("/usuario/validar/email").permitAll()
+                        .requestMatchers("/usuario/validar/esquecer-senha").permitAll()
+                        .requestMatchers("/usuario/validar/trocar-senha").permitAll()
                         .requestMatchers("/usuario/autenticar/gmail").permitAll()
                         .requestMatchers("/usuario/cadastrar/gmail").permitAll()
                         .requestMatchers("/usuario").permitAll()

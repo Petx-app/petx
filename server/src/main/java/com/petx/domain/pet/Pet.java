@@ -16,7 +16,7 @@ public class Pet {
     private UUID uuid;
 
     @ManyToOne
-    @JoinColumn(name = "id_dono")
+    @JoinColumn(name = "uuid_dono")
     private Usuario dono;
 
     private String nome;
