@@ -78,6 +78,13 @@ public class UsuarioController {
     }
 
     @Tag(name = "Public API")
+    @PostMapping("/validar/link/{codigoValidacao}")
+    public ResponseEntity<Object> validarLink(@PathVariable UUID codigoValidacao ) {
+        facade.validarLink(codigoValidacao);
+        return ResponseEntity.ok("link valido");
+    }
+
+    @Tag(name = "Public API")
     @PutMapping("/validar/trocar-senha/{codigoValidacao}")
     public ResponseEntity<Object> trocarSenha(@RequestBody @Valid TrocarSenhaDTO trocarSenhaDTO, @PathVariable UUID codigoValidacao ) {
         facade.trocarSenha(trocarSenhaDTO, codigoValidacao);

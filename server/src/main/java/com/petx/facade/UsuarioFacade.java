@@ -141,6 +141,10 @@ public class UsuarioFacade {
         }
     }
 
+    public void validarLink(UUID codigoValidacao){
+        validacaoUsuarioService.validarLinkTrocaSenha(codigoValidacao);
+    }
+
     public void trocarSenha(TrocarSenhaDTO senha, UUID codigoValidacao){
         TrocarSenha senhaNova  = mapper.toEntityTrocarSenha(senha, codigoValidacao);
         validacaoUsuarioService.trocarSenha(senhaNova);

@@ -72,6 +72,22 @@ public class ValidacaoUsuarioService {
         throw new RuntimeException("erro ao localizar email");
     }
 
+    public boolean validarLinkTrocaSenha(UUID codigoValidacao){
+        Optional<ValidacaoSenha> optionalValidacaoSenha = validacaoSenhaRepository.findByCodigoValidar(codigoValidacao);
+
+        if(optionalValidacaoSenha.isPresent()){
+            ValidacaoSenha validacaoSenha = optionalValidacaoSenha.get();
+
+            if(validacaoSenha.getHoraInserida().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
+                    && ChronoUnit.MINUTES.between(validacaoSenha.getHoraInserida(), LocalDateTime.now()) <= 15) {
+                return true;
+            }
+            validacaoSenhaRepository.deleteById(validacaoSenha.getId());
+            throw new RuntimeException("Link expirado");
+        }
+        throw new RuntimeException("Link expirado");
+    }
+
     public void trocarSenha(TrocarSenha senhaNova){
         Optional<ValidacaoSenha> optionalValidarSenha = validacaoSenhaRepository.findByCodigoValidar(senhaNova.getCodigoValidacao());
 
@@ -79,7 +95,8 @@ public class ValidacaoUsuarioService {
             ValidacaoSenha validacaoSenha = optionalValidarSenha.get();
 
             if(validacaoSenha.getHoraInserida().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
-                    && ChronoUnit.MINUTES.between(validacaoSenha.getHoraInserida(), LocalDateTime.now()) <= 5) {
+                    && ChronoUnit.MINUTES.between(validacaoSenha.getHoraInserida(), LocalDateTime.now()) <= 15) {
+
                 Optional<Usuario> optionalUsuario = usuarioRepository.findById(validacaoSenha.getUsuario().getUuid());
                 if (optionalUsuario.isPresent()) {
                     Usuario usuario = optionalUsuario.get();
