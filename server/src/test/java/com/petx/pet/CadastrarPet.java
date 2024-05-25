@@ -28,7 +28,7 @@ public class CadastrarPet {
     public void cadastrarPet() {
         UUID uuidDoPet = UUID.fromString("ca337f89-c7d4-4101-a328-7d11442667c0");
         Usuario dono = new Usuario();
-        dono.setId(10L);
+        dono.setUuid(UUID.randomUUID());
         dono.setNome("joao");
         dono.setEmail("joao@gmail.com");
         dono.setSenha("123456");

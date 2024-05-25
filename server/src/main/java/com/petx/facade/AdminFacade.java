@@ -46,14 +46,13 @@ public class AdminFacade {
         adminService.criarQRCode(qtd);
     }
 
-    public List<UUIDRetornoDTO> buscarPetsNaoCadastrados() {
+    public List<String> buscarPetsNaoCadastrados() {
         List<Pet> pets = adminService.buscarPetsNaoCadastrados();
-        List<UUIDRetornoDTO> retornoUUIDLista = new ArrayList<>();
+        List<String> retornoUUIDLista = new ArrayList<>();
+        String link = "http://localhost:8080/qrcode/59254d2c-0e95-4f2b-aacf-bb4f3e1969d0";
 
         for (Pet pet : pets) {
-            UUIDRetornoDTO retornoUUID = new UUIDRetornoDTO();
-            retornoUUID.setUuid(pet.getUuid());
-            retornoUUIDLista.add(retornoUUID);
+            retornoUUIDLista.add(link + pet.getUuid());
         }
         return retornoUUIDLista;
     }

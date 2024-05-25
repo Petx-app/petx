@@ -25,7 +25,7 @@ public class AdminController {
 
     @GetMapping("/pets-nao-cadastrados")
     public ResponseEntity buscarPetsNaoCadastrados() {
-        List<UUIDRetornoDTO> listUUIDs = adminFacade.buscarPetsNaoCadastrados();
+        List<String> listUUIDs = adminFacade.buscarPetsNaoCadastrados();
         return ResponseEntity.ok(listUUIDs);
     }
 
