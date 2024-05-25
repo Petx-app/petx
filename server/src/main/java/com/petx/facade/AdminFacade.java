@@ -1,7 +1,6 @@
 package com.petx.facade;
 
 import com.petx.api.dto.admin.AdminDTO;
-import com.petx.api.dto.admin.UUIDRetornoDTO;
 import com.petx.domain.admin.Admin;
 import com.petx.domain.pet.Pet;
 import com.petx.mapper.admin.AdminMapper;
