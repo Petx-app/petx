@@ -1,27 +1,23 @@
 package com.petx.facade;
 
 import com.petx.api.dto.admin.AdminDTO;
+import com.petx.api.dto.admin.UuidDTO;
 import com.petx.domain.admin.Admin;
+import com.petx.domain.admin.UuidQRCodeGerado;
 import com.petx.domain.pet.Pet;
 import com.petx.mapper.admin.AdminMapper;
 import com.petx.service.admin.AdminService;
 import com.petx.service.security.JwtServiceImpl;
-import com.petx.service.pet.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Component
 public class AdminFacade {
 
     @Autowired
     private AdminService adminService;
-
-    @Autowired
-    private PetService petService;
 
     @Autowired
     private AdminMapper mapper;
@@ -45,13 +41,19 @@ public class AdminFacade {
         adminService.criarQRCode(qtd);
     }
 
-    public List<String> buscarPetsNaoCadastrados() {
+    public void QRCodeGerado(UUID QRCodeGeradoDTO){
+        UuidQRCodeGerado uuid = mapper.toEntityUuid(QRCodeGeradoDTO);
+        adminService.QRCodeGerado(uuid);
+    }
+
+    public List<UuidDTO> buscarPetsNaoCadastrados() {
         List<Pet> pets = adminService.buscarPetsNaoCadastrados();
-        List<String> retornoUUIDLista = new ArrayList<>();
-        String link = "http://localhost:8080/qrcode/59254d2c-0e95-4f2b-aacf-bb4f3e1969d0";
+        List<UuidDTO> retornoUUIDLista = new ArrayList<>();
 
         for (Pet pet : pets) {
-            retornoUUIDLista.add(link + pet.getUuid());
+            UuidDTO retornoLink = new UuidDTO();
+            retornoLink.setUUIDQRCode(pet.getUuid());
+            retornoUUIDLista.add(retornoLink);
         }
         return retornoUUIDLista;
     }

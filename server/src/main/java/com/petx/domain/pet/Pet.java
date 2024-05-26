@@ -41,6 +41,8 @@ public class Pet {
 
     private Date dataInclusao;
 
+    private Boolean qrcodeGerado;
+
     @PrePersist
     protected void onCreate() {
         dataInclusao = new Date();

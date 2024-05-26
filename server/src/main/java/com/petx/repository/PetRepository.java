@@ -15,5 +15,5 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
 
     List<Pet> findByDonoUuid(UUID uuid);
 
-    List<Pet> findByCadastrado(boolean cadastrado);
+    List<Pet> findByQrcodeGerado(boolean qrcodeGerado);
 }
