@@ -70,6 +70,12 @@ public class UsuarioController {
         return ResponseEntity.ok("email enviado");
     }
 
+    @PostMapping("/confirmar/email")
+    public ResponseEntity<Object> confirmarEmail(@RequestBody @Valid CodigoValidacaoEmailDTO codigoValidacaoEmailDTO){
+        facade.confirmarEmail(codigoValidacaoEmailDTO);
+        return ResponseEntity.ok("email validado");
+    }
+
     @Tag(name = "Public API")
     @PostMapping("/validar/esquecer-senha")
     public ResponseEntity<Object> esqueceuSenha(@RequestBody @Valid EmailDTO emailDTO) {

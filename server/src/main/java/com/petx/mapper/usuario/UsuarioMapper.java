@@ -1,9 +1,7 @@
 package com.petx.mapper.usuario;
 
-import com.petx.api.dto.Usuario.EmailDTO;
-import com.petx.api.dto.Usuario.LoginUsuarioDTO;
-import com.petx.api.dto.Usuario.TrocarSenhaDTO;
-import com.petx.api.dto.Usuario.UsuarioDTO;
+import com.petx.api.dto.Usuario.*;
+import com.petx.domain.usuario.CodigoValidacaoEmail;
 import com.petx.domain.usuario.EmailValidar;
 import com.petx.domain.usuario.TrocarSenha;
 import com.petx.domain.usuario.Usuario;
@@ -61,6 +59,14 @@ public class UsuarioMapper {
         TrocarSenha entity = new TrocarSenha();
         entity.setCodigoValidacao(codigoValidacao);
         entity.setSenha(dto.getSenha());
+
+        return entity;
+    }
+
+    public CodigoValidacaoEmail toEntityCodigoValidacaoEmail(CodigoValidacaoEmailDTO dto){
+        CodigoValidacaoEmail entity = new CodigoValidacaoEmail();
+        entity.setCodigoVerificacao(dto.getCodigoVerificacao());
+        entity.setEmail(dto.getEmail());
 
         return entity;
     }

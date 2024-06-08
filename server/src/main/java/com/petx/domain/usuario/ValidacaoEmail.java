@@ -16,10 +16,13 @@ public class ValidacaoEmail {
 
     private String codigo;
 
+    private boolean validado;
+
     private LocalDateTime horaInserida;
 
     @PrePersist
     protected void onCreate() {
         this.horaInserida = LocalDateTime.now();
+        this.validado = false;
     }
 }

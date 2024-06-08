@@ -11,11 +11,6 @@ public class UsuarioDTO {
 
     @NotBlank
     @NotNull
-    @Size(min = 4, max = 4)
-    private String codigoVerificacao;
-
-    @NotBlank
-    @NotNull
     private String email;
 
     @NotBlank

@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( (authz) -> authz
                         .requestMatchers("/usuario/autenticar").permitAll()
                         .requestMatchers("/usuario/validar/email").permitAll()
+                        .requestMatchers("/usuario/confirmar/email").permitAll()
                         .requestMatchers("/usuario/validar/esquecer-senha").permitAll()
                         .requestMatchers("/usuario/validar/link/**").permitAll()
                         .requestMatchers("/usuario/validar/trocar-senha/**").permitAll()

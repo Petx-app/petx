@@ -36,20 +36,23 @@ public class ValidacaoUsuarioService {
         Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(validarEmail.getEmail());
 
         if(optionalValidacaoEmail.isPresent()){
-            throw new RuntimeException("ja tem email cadastrado");
+            ValidacaoEmail validacaoEmail = optionalValidacaoEmail.get();
+            validacaoUsuarioRepository.deleteById(validacaoEmail.getId());
         }
         validacaoUsuarioRepository.save(validarEmail);
     }
 
-    public boolean validarEmail(String email, String codigoVerificacaoEmail){
-        Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(email);
+    public boolean validarEmail(CodigoValidacaoEmail codigoValidacaoEmail){
+        Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(codigoValidacaoEmail.getEmail());
 
         if(optionalValidacaoEmail.isPresent()){
             ValidacaoEmail validacaoEmail = optionalValidacaoEmail.get();
 
             if(validacaoEmail.getHoraInserida().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())
                     && ChronoUnit.MINUTES.between(validacaoEmail.getHoraInserida(), LocalDateTime.now()) <= 2) {
-                if (validacaoEmail.getCodigo().equals(codigoVerificacaoEmail.toUpperCase())) {
+                if (validacaoEmail.getCodigo().equals(codigoValidacaoEmail.getCodigoVerificacao().toUpperCase())) {
+                    validacaoEmail.setValidado(true);
+                    validacaoUsuarioRepository.save(validacaoEmail);
                     return true;
                 }
                 throw new RuntimeException("Codigo incorreto");
@@ -58,6 +61,21 @@ public class ValidacaoUsuarioService {
             throw new RuntimeException("Codigo expirado");
         }
         throw new RuntimeException("Erro ao salvar usuario sem autenticar");
+    }
+
+    public boolean confirmarEmailValidado(String email){
+        Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(email);
+        if(optionalValidacaoEmail.isPresent()){
+            ValidacaoEmail validacaoEmail = optionalValidacaoEmail.get();
+
+            if(validacaoEmail.isValidado()){
+                return true;
+            }else{
+                validacaoUsuarioRepository.deleteById(validacaoEmail.getId());
+                throw new RuntimeException("email nao esta validado.");
+            }
+        }
+        return false;
     }
 
     public UUID gerarCodigoTrocarSenha(EmailValidar email){

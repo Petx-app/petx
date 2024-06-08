@@ -1,10 +1,7 @@
 package com.petx.facade;
 
 import com.petx.api.dto.Usuario.*;
-import com.petx.domain.usuario.EmailValidar;
-import com.petx.domain.usuario.TrocarSenha;
-import com.petx.domain.usuario.Usuario;
-import com.petx.domain.usuario.ValidacaoEmail;
+import com.petx.domain.usuario.*;
 import com.petx.mapper.usuario.UsuarioMapper;
 import com.petx.service.security.JwtServiceImpl;
 import com.petx.service.security.UserTokenService;
@@ -45,18 +42,19 @@ public class UsuarioFacade {
     private ValidacaoUsuarioService validacaoUsuarioService;
 
     public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) {
-        validacaoUsuarioService.validarEmail(usuarioDTO.getEmail().toLowerCase(), usuarioDTO.getCodigoVerificacao());
+        if(validacaoUsuarioService.confirmarEmailValidado(usuarioDTO.getEmail())){
+            Usuario usuario = mapper.toEntity(usuarioDTO);
 
-        Usuario usuario = mapper.toEntity(usuarioDTO);
+            Usuario usuarioCadastrado = service.cadastrar(usuario);
+            String token = jwtService.gerarToken(usuarioCadastrado);
 
-        Usuario usuarioCadastrado = service.cadastrar(usuario);
-        String token = jwtService.gerarToken(usuarioCadastrado);
+            UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
+            usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
+            usuarioLogadoDTO.setToken(token);
 
-        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
-        usuarioLogadoDTO.setToken(token);
-
-        return usuarioLogadoDTO;
+            return usuarioLogadoDTO;
+        }
+       return null;
     }
 
     public UsuarioLogadoDTO cadastrarGoogle(String tokenGoogle) {
@@ -128,6 +126,11 @@ public class UsuarioFacade {
         } else{
             throw new RuntimeException("usuario já existe");
         }
+    }
+
+    public void confirmarEmail(CodigoValidacaoEmailDTO codigoValidacaoEmailDTO){
+        CodigoValidacaoEmail codigoValidacaoEmail = mapper.toEntityCodigoValidacaoEmail(codigoValidacaoEmailDTO);
+        validacaoUsuarioService.validarEmail(codigoValidacaoEmail);
     }
 
     public void esqueceuSenha(EmailDTO emailDTO){
