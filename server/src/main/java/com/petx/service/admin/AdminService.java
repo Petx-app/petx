@@ -1,5 +1,6 @@
 package com.petx.service.admin;
 
+import com.petx.api.dto.admin.RegistroPet;
 import com.petx.domain.admin.Admin;
 import com.petx.domain.admin.UuidQRCodeGerado;
 import com.petx.domain.pet.Pet;
@@ -20,6 +21,10 @@ public class AdminService {
     private PetRepository petRepository;
 
     public void criarQRCode(int qtd) {
+
+        if(qtd <= 0){
+            throw new RuntimeException("Deve ser maior que 0");
+        }
         if (qtd > 100) {
             throw new RuntimeException("Maximo 100 pets por vez");
         }
@@ -54,6 +59,21 @@ public class AdminService {
             throw new RuntimeException("erro ao atualizar status do qrcode do pet");
         }
     }
+
+    public RegistroPet buscarRegistroPet(){
+        int UuidDisponivel = petRepository.countByQrcodeGerado(false);
+        int QRCodeGerado = petRepository.countByQrcodeGerado(true);
+        int petCadastrado = petRepository.countByCadastrado(true);
+
+        RegistroPet registros = new RegistroPet();
+
+        registros.setDisponivel(UuidDisponivel);
+        registros.setQRCodeGerado(QRCodeGerado);
+        registros.setPetCadastrado(petCadastrado);
+
+        return registros;
+    }
+
 
     public Admin autenticar(Admin admin) {
         Optional<Admin> optionalAdmin = adminRepository.findByUsuario(admin.getUsuario());
