@@ -19,6 +19,7 @@ public class QRCodeFacade {
         Pet pet = service.buscarQRCode(uuid);
         QRCodeDTO QRCodeDTO = new QRCodeDTO();
         QRCodeDTO.setNomePet(pet.getNome());
+        QRCodeDTO.setEspecie(pet.getEspecie());
 
         Usuario usuario = pet.getDono();
         QRCodeDTO.setTelefoneDono(usuario.getTelefone());

@@ -10,4 +10,6 @@ public class QRCodeDTO {
     String nomeDono;
 
     String telefoneDono;
+
+    String especie;
 }

@@ -19,6 +19,6 @@ public class UsuarioDTO {
     @NotNull
     private String nome;
 
-    @Size(min = 10, max = 10)
+    @Size(min = 10, max = 12)
     private String telefone;
 }
