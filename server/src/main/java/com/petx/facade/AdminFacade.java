@@ -1,6 +1,7 @@
 package com.petx.facade;
 
 import com.petx.api.dto.admin.AdminDTO;
+import com.petx.api.dto.admin.RegistroPet;
 import com.petx.api.dto.admin.UuidDTO;
 import com.petx.domain.admin.Admin;
 import com.petx.domain.admin.UuidQRCodeGerado;
@@ -44,6 +45,11 @@ public class AdminFacade {
     public void QRCodeGerado(UUID QRCodeGeradoDTO){
         UuidQRCodeGerado uuid = mapper.toEntityUuid(QRCodeGeradoDTO);
         adminService.QRCodeGerado(uuid);
+    }
+
+    public RegistroPet buscarRegistros(){
+        RegistroPet registroPet = adminService.buscarRegistroPet();
+        return registroPet;
     }
 
     public List<UuidDTO> buscarPetsNaoCadastrados() {

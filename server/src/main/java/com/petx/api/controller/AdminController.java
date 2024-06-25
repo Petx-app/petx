@@ -1,6 +1,7 @@
 package com.petx.api.controller;
 
 import com.petx.api.dto.admin.AdminDTO;
+import com.petx.api.dto.admin.RegistroPet;
 import com.petx.api.dto.admin.UuidDTO;
 import com.petx.facade.AdminFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +24,22 @@ public class AdminController {
         return ResponseEntity.ok("Quantidade de pets criados: " + qtd );
     }
 
-    @GetMapping("/pets-nao-cadastrados")
+    @GetMapping("/uuid-disponiveis")
     public ResponseEntity buscarPetsNaoCadastrados() {
         List<UuidDTO> listLinkQRCode = adminFacade.buscarPetsNaoCadastrados();
         return ResponseEntity.ok(listLinkQRCode);
     }
 
-    @PostMapping("/qrcode/{uuidQRCodeGerado}")
+    @PutMapping("/qrcode/{uuidQRCodeGerado}")
     public ResponseEntity QRCodeGerado(@PathVariable UUID uuidQRCodeGerado){
         adminFacade.QRCodeGerado(uuidQRCodeGerado);
         return ResponseEntity.ok("QRCode gerado");
+    }
+
+    @GetMapping("/dados-pets")
+    public ResponseEntity buscarRegistros(){
+        RegistroPet registros = adminFacade.buscarRegistros();
+        return ResponseEntity.ok(registros);
     }
 
     @PostMapping("/autenticar")

@@ -4,6 +4,7 @@ import com.petx.domain.pet.Pet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,4 +17,8 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
     List<Pet> findByDonoUuid(UUID uuid);
 
     List<Pet> findByQrcodeGerado(boolean qrcodeGerado);
+
+    int countByQrcodeGerado(boolean qrcodeGerado);
+
+    int countByCadastrado(boolean cadastrado);
 }
