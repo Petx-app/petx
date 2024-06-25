@@ -29,7 +29,7 @@ const ConfirmEmail = ({ email, onConfirmSuccess }: string) => {
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setValue: React.Dispatch<React.SetStateAction<string>>
+    setValue: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     const value = e.target.value.slice(0, 1);
     setValue(value);

@@ -34,12 +34,11 @@ const ValidarEmail = ({ onTenhoContaClick }) => {
       reset();
     } catch (e) {
       setButtonLoading(false);
-      toast.error(e.message)
+      toast.error(e.message);
     }
   };
   return (
     <>
-    
       <div className="relative w-full lg:w-2/3 xl:w-1/2 h-full flex flex-col bg-glass-blue backdrop-blur-md justify-center items-center sm:rounded-xl lg:rounded-r-xl lg:rounded-none">
         <h1 className="mb-5 lg:mb-0 w-4/5 text-4xl font-roboto font-bold text-custom-blue">
           Cadastrar
@@ -93,8 +92,8 @@ const ValidarEmail = ({ onTenhoContaClick }) => {
           </button>
         </div>
       </div>
-      <ToastContainer/>
-      </>
+      <ToastContainer />
+    </>
   );
 };
 

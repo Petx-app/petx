@@ -1,16 +1,20 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { autenticar } from "./funLogin";
-import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import { autenticar } from "./funLogin";
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 type DataInput = {
-  email: string;
+  usuario: string;
   senha: string;
 };
-
-const Entrar = ({ onCriarContaClick }) => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(true);
+  const { isAuth } = useAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -22,42 +26,43 @@ const Entrar = ({ onCriarContaClick }) => {
   const onSubmit = async (data: any) => {
     try {
       await autenticar(data);
-      alert("autenticado");
-    } catch (e) {
+      isAuth(true);
+      router.push({
+        pathname: "/admin",
+      });
+    } catch (e: any) {
       toast.error(e.message);
     }
   };
 
+  useEffect(() => {
+    Cookies.remove("jwt");
+  }, []);
+
   return (
-    <>
-      <div className="relative w-full lg:w-2/3 xl:w-1/2 h-full flex flex-col bg-glass-blue backdrop-blur-md justify-center items-center sm:rounded-xl lg:rounded-l-xl lg:rounded-none">
-        <h1 className="mb-5 lg:mb-0 w-4/5 text-4xl font-roboto font-bold text-custom-blue">
-          Login
-        </h1>
-        <form className="w-4/5 mt-5" onSubmit={handleSubmit(onSubmit)}>
+    <div className="bg-custom-blue w-full h-screen flex justify-center items-center">
+      <div className="w-2/5 m-h-2/5 flex flex-col bg-slate-50 p-10 rounded-xl">
+        <h1 className="text-custom-blue font-bold text-4xl">Admin</h1>
+        <form className="w-full mt-5 h-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative mb-6">
             <label
               className="block text-xl mb-2 text-custom-blue"
               htmlFor="email"
             >
-              Email
+              Usuario
             </label>
             <input
               className="w-full h-12 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500 text-custom-blue"
               type="text"
               id="email"
               placeholder="Insira seu email"
-              {...register("email", {
+              {...register("usuario", {
                 required: "O campo de e-mail é obrigatório",
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: "Por favor, insira um e-mail válido",
-                },
               })}
             />
 
-            {errors.email && (
-              <p className="pt-2 text-red-500">{errors.email.message}</p>
+            {errors.usuario && (
+              <p className="pt-2 text-red-500">{errors.usuario.message}</p>
             )}
           </div>
           <div className="mb-4">
@@ -69,7 +74,7 @@ const Entrar = ({ onCriarContaClick }) => {
             </label>
             <div className="relative w-full h-12">
               <input
-                className="w-full h-12 px-3 py-2 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500 text-custom-blue mr-2"
+                className="w-full h-12 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500 text-custom-blue mr-2"
                 type={showPassword ? "password" : "text"}
                 id="password"
                 placeholder="Insira sua senha"
@@ -93,33 +98,17 @@ const Entrar = ({ onCriarContaClick }) => {
             )}
           </div>
 
-          <p className="text-xs font-semibold font-roboto text-custom-blue cursor-pointer">
-            Esqueci minha senha
-          </p>
-
           <button
-            className="w-full h-12 bg-custom-blue text-m font-roboto rounded-md text-custom-yellow mt-7 mb-4"
             type="submit"
+            className="w-full h-12 text-white bg-custom-blue rounded-xl"
           >
             Entrar
           </button>
-
-          <div className="w-full flex gap-4">
-            <button
-              className="w-1/2 h-12 bg-custom-yellow text-m font-roboto rounded-md"
-              onClick={onCriarContaClick}
-            >
-              Criar uma conta
-            </button>
-            <button className="w-1/2 h-12 bg-custom-yellow text-m font-roboto rounded-md">
-              Entrar com google
-            </button>
-          </div>
         </form>
       </div>
       <ToastContainer />
-    </>
+    </div>
   );
 };
 
-export default Entrar;
+export default Login;

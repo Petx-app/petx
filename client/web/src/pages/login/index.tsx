@@ -21,7 +21,7 @@ const login = () => {
             {
               "rounded-r-xl": !stateForm,
               "rounded-l-xl": stateForm,
-            }
+            },
           )}
         >
           <img src={Logo.src} alt="petx" className="w-1/2" />

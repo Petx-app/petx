@@ -23,7 +23,6 @@ const FormularioCadastrar = ({ email }) => {
   const onSubmit = async (data: any) => {
     data = { ...data, email };
     try {
-      console.log(data);
       await cadastrar(data);
       alert("usuario cadastrado");
       reset();

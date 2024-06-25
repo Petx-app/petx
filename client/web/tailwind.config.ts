@@ -28,6 +28,9 @@ const config: Config = {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
       },
+      height: {
+        '95': '95%', // Adiciona uma altura de 95%
+      },
     },
   },
   plugins: [],
