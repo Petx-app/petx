@@ -75,7 +75,7 @@ public class ValidacaoUsuarioService {
                 throw new RuntimeException("email nao esta validado.");
             }
         }
-        return false;
+        throw new RuntimeException("email nao encontrado.");
     }
 
     public UUID gerarCodigoTrocarSenha(EmailValidar email){

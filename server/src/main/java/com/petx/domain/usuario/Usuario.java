@@ -20,6 +20,10 @@ public class Usuario {
 
     private String telefone;
 
+    private String cidade;
+
+    private String estado;
+
     private LocalDateTime dtInclusao;
 
     @PrePersist

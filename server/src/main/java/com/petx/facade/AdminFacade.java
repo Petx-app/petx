@@ -1,5 +1,6 @@
 package com.petx.facade;
 
+import com.nimbusds.jose.JOSEException;
 import com.petx.api.dto.admin.AdminDTO;
 import com.petx.api.dto.admin.RegistroPet;
 import com.petx.api.dto.admin.UuidDTO;
@@ -26,7 +27,7 @@ public class AdminFacade {
     @Autowired
     private JwtServiceImpl jwtService;
 
-    public Map<String, Object> autenticar(AdminDTO loginAdminDTO) {
+    public Map<String, Object> autenticar(AdminDTO loginAdminDTO) throws JOSEException {
         Admin admin = mapper.toEntity(loginAdminDTO);
         Admin adminLogado = adminService.autenticar(admin);
         String token = jwtService.gerarTokenAdmin(adminLogado);

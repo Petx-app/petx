@@ -2,12 +2,14 @@ package com.petx.api.dto.pet;
 
 import lombok.Data;
 
-@Data
-public class ListPets {
+import java.util.UUID;
 
-    String uuid;
+@Data
+public class ListPetsDTO {
+
+    UUID uuid;
 
     String nome;
 
-    String especie;
+    String raca;
 }

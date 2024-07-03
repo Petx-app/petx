@@ -1,2 +1,17 @@
-package com.petx.api.controller;public class SecurityController {
+package com.petx.api.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/security")
+public class SecurityController {
+
+    @GetMapping("/jwt")
+    public ResponseEntity validarToken(){
+        return ResponseEntity.ok("autenticado");
+    }
+
 }

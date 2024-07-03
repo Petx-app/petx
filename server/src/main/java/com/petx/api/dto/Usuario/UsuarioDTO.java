@@ -17,8 +17,18 @@ public class UsuarioDTO {
     private String senha;
 
     @NotNull
+    @NotBlank
     private String nome;
 
-    @Size(min = 10, max = 12)
+    @NotNull
+    @NotBlank
     private String telefone;
+
+    @NotNull
+    @NotBlank
+    private String cidade;
+
+    @NotNull
+    @NotBlank
+    private String estado;
 }

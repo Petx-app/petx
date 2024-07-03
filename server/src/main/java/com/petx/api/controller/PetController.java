@@ -1,5 +1,6 @@
 package com.petx.api.controller;
 
+import com.petx.api.dto.pet.ListPetsDTO;
 import com.petx.api.dto.pet.PetDTO;
 import com.petx.facade.PetFacade;
 import jakarta.validation.Valid;
@@ -31,8 +32,8 @@ public class PetController {
 
     @GetMapping("/list")
     public ResponseEntity<Object> buscarTodos(@RequestHeader("Authorization") String token) {
-        List<PetDTO> petDTO = facade.buscarTodos(token);
-        return ResponseEntity.ok(petDTO);
+        List<ListPetsDTO> listPetsDTO = facade.buscarTodos(token);
+        return ResponseEntity.ok(listPetsDTO);
     }
 
     @PutMapping

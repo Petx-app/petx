@@ -1,5 +1,6 @@
 package com.petx.api.controller;
 
+import com.nimbusds.jose.JOSEException;
 import com.petx.api.dto.Usuario.*;
 import com.petx.facade.UsuarioFacade;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,14 +20,14 @@ public class UsuarioController {
 
     @Tag(name = "Public API")
     @PostMapping
-    public ResponseEntity<Object> cadastrar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid UsuarioDTO usuarioDTO) throws JOSEException {
         UsuarioLogadoDTO usuarioLogado = facade.cadastrar(usuarioDTO);
         return ResponseEntity.ok(usuarioLogado);
     }
 
     @Tag(name = "Public API")
     @PostMapping("/cadastrar/gmail")
-    public ResponseEntity<Object> cadastrarGoogle(@RequestBody String tokenGoogle){
+    public ResponseEntity<Object> cadastrarGoogle(@RequestBody String tokenGoogle) throws JOSEException {
         UsuarioLogadoDTO usuarioLogado = facade.cadastrarGoogle(tokenGoogle);
         return ResponseEntity.ok(usuarioLogado);
     }
@@ -51,14 +52,14 @@ public class UsuarioController {
 
     @Tag(name = "Public API")
     @PostMapping("/autenticar")
-    public ResponseEntity<Object> autenticar(@RequestBody @Valid LoginUsuarioDTO loginUsuarioDTO) {
+    public ResponseEntity<Object> autenticar(@RequestBody @Valid LoginUsuarioDTO loginUsuarioDTO) throws JOSEException {
         UsuarioLogadoDTO usuarioLogado = facade.autenticar(loginUsuarioDTO);
         return ResponseEntity.ok(usuarioLogado);
     }
 
     @Tag(name = "Public API")
     @PostMapping("/autenticar/gmail")
-    public ResponseEntity<Object> autenticarGmail(@RequestBody String token){
+    public ResponseEntity<Object> autenticarGmail(@RequestBody String token) throws JOSEException {
         UsuarioLogadoDTO usuarioLogado = facade.autenticarGoogle(token);
         return ResponseEntity.ok(usuarioLogado);
     }

@@ -31,6 +31,8 @@ public class UsuarioMapper {
         entity.setSenha(criptografia.criptogafarSenha(dto.getSenha(), entity.getUuid()));
         entity.setNome(dto.getNome());
         entity.setTelefone(dto.getTelefone());
+        entity.setCidade(dto.getCidade());
+        entity.setEstado(dto.getEstado());
 
         return entity;
     }
@@ -44,6 +46,8 @@ public class UsuarioMapper {
         dto.setSenha(null);
         dto.setNome(usuario.getNome());
         dto.setTelefone(usuario.getTelefone());
+        dto.setCidade(usuario.getCidade());
+        dto.setEstado(usuario.getEstado());
 
         return dto;
     }

@@ -1,5 +1,6 @@
 package com.petx.facade;
 
+import com.petx.api.dto.pet.ListPetsDTO;
 import com.petx.api.dto.pet.PetDTO;
 import com.petx.domain.pet.Pet;
 import com.petx.mapper.pet.QRCodeMapper;
@@ -39,25 +40,19 @@ public class PetFacade {
         return mapper.toDTO(pet);
     }
 
-    public List<PetDTO> buscarTodos(String token) {
+    public List<ListPetsDTO> buscarTodos(String token) {
         UUID uuidDono = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
         List<Pet> pets = service.buscarTodos(uuidDono);
-        List<PetDTO> petDTOs = new ArrayList<>();
+        List<ListPetsDTO> listPetsDTOs = new ArrayList<>();
 
         for (Pet pet : pets) {
-            PetDTO petDTO = new PetDTO();
-            petDTO.setUuid(pet.getUuid());
-            petDTO.setNome(pet.getNome());
-            petDTO.setEspecie(pet.getEspecie());
-            petDTO.setRaca(pet.getRaca());
-            petDTO.setCor(pet.getCor());
-            petDTO.setPorte(pet.getPorte());
-            petDTO.setPeso(pet.getPeso());
-            petDTO.setGenero(pet.getGenero());
-            petDTO.setDataNascimento(pet.getDataNascimento());
-            petDTOs.add(petDTO);
+            ListPetsDTO PetsDTOs = new ListPetsDTO();
+            PetsDTOs.setUuid(pet.getUuid());
+            PetsDTOs.setNome(pet.getNome());
+            PetsDTOs.setRaca(pet.getRaca());
+            listPetsDTOs.add(PetsDTOs);
         }
-        return petDTOs;
+        return listPetsDTOs;
     }
 
     public void atualizar(PetDTO petDTO, String token) {

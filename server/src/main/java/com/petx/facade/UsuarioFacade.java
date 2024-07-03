@@ -1,5 +1,6 @@
 package com.petx.facade;
 
+import com.nimbusds.jose.JOSEException;
 import com.petx.api.dto.Usuario.*;
 import com.petx.domain.usuario.*;
 import com.petx.mapper.usuario.UsuarioMapper;
@@ -41,7 +42,7 @@ public class UsuarioFacade {
     @Autowired
     private ValidacaoUsuarioService validacaoUsuarioService;
 
-    public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) {
+    public UsuarioLogadoDTO cadastrar(UsuarioDTO usuarioDTO) throws JOSEException {
         if(validacaoUsuarioService.confirmarEmailValidado(usuarioDTO.getEmail())){
             Usuario usuario = mapper.toEntity(usuarioDTO);
 
@@ -49,15 +50,15 @@ public class UsuarioFacade {
             String token = jwtService.gerarToken(usuarioCadastrado);
 
             UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-            usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
+            usuarioLogadoDTO.setNome(usuarioCadastrado.getNome().split(" ")[0]);
             usuarioLogadoDTO.setToken(token);
 
             return usuarioLogadoDTO;
         }
-       return null;
+        return null;
     }
 
-    public UsuarioLogadoDTO cadastrarGoogle(String tokenGoogle) {
+    public UsuarioLogadoDTO cadastrarGoogle(String tokenGoogle) throws JOSEException {
         Usuario usuario = googleService.cadastrarGoogle(tokenGoogle);
 
         Usuario usuarioCadastrado = service.cadastrarGoogle(usuario);
@@ -91,7 +92,7 @@ public class UsuarioFacade {
         service.deletar(uuid);
     }
 
-    public UsuarioLogadoDTO autenticar(LoginUsuarioDTO loginUsuarioDTO) {
+    public UsuarioLogadoDTO autenticar(LoginUsuarioDTO loginUsuarioDTO) throws JOSEException {
         Usuario usuario = mapper.toEntityLogin(loginUsuarioDTO);
 
         Usuario usuarioLogado = service.autenticar(usuario);
@@ -104,7 +105,7 @@ public class UsuarioFacade {
         return usuarioLogadoDTO;
     }
 
-    public UsuarioLogadoDTO autenticarGoogle(String tokenGoogle){
+    public UsuarioLogadoDTO autenticarGoogle(String tokenGoogle) throws JOSEException {
         Usuario usuario = googleService.autenticarGoogle(tokenGoogle);
         Usuario usuarioLogado = service.autenticarGoogle(usuario);
         String token = jwtService.gerarToken(usuarioLogado);

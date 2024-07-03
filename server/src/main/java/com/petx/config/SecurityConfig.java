@@ -67,7 +67,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeHttpRequests( (authz) -> authz
+                .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/usuario/autenticar").permitAll()
                         .requestMatchers("/usuario/validar/email").permitAll()
                         .requestMatchers("/usuario/confirmar/email").permitAll()
@@ -80,7 +80,6 @@ public class SecurityConfig {
                         .requestMatchers("/admin/autenticar").permitAll()
                         .requestMatchers("/qrcode/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**").permitAll()
-
                         .anyRequest().authenticated()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -91,7 +90,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilterRegistration(){
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
 
         List<String> all = Arrays.asList("*");
 
@@ -107,7 +106,7 @@ public class SecurityConfig {
         CorsFilter corsFilter = new CorsFilter(source);
 
         FilterRegistrationBean<CorsFilter> filter =
-                new FilterRegistrationBean<CorsFilter>(corsFilter);
+                new FilterRegistrationBean<>(corsFilter);
         filter.setOrder(Ordered.HIGHEST_PRECEDENCE);
 
         return filter;

@@ -1,2 +1,4 @@
-package com.petx.facade;public class SecurityFacade {
+package com.petx.facade;
+
+public class SecurityFacade {
 }

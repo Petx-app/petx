@@ -1,5 +1,6 @@
 package com.petx.api.controller;
 
+import com.nimbusds.jose.JOSEException;
 import com.petx.api.dto.admin.AdminDTO;
 import com.petx.api.dto.admin.RegistroPet;
 import com.petx.api.dto.admin.UuidDTO;
@@ -43,7 +44,7 @@ public class AdminController {
     }
 
     @PostMapping("/autenticar")
-    public ResponseEntity autenticar(@RequestBody AdminDTO adminDTO) {
+    public ResponseEntity autenticar(@RequestBody AdminDTO adminDTO) throws JOSEException {
         Map<String, Object> adminUsuario = adminFacade.autenticar(adminDTO);
         return ResponseEntity.ok(adminUsuario);
     }
