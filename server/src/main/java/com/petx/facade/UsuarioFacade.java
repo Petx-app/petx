@@ -59,14 +59,21 @@ public class UsuarioFacade {
     }
 
     public UsuarioLogadoDTO cadastrarGoogle(String tokenGoogle) throws JOSEException {
-        Usuario usuario = googleService.cadastrarGoogle(tokenGoogle);
+        Usuario usuario = googleService.consultarUsuarioGoogle(tokenGoogle);
 
-        Usuario usuarioCadastrado = service.cadastrarGoogle(usuario);
-        String token = jwtService.gerarToken(usuarioCadastrado);
-
+        Usuario usuarioLogado;
         UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setNome(usuarioCadastrado.getNome());
+
+        if(validacaoUsuarioService.verificarEmail(usuario.getEmail())){
+            usuarioLogado = service.cadastrarGoogle(usuario);
+        } else{
+            usuarioLogado = service.autenticarGoogle(usuario);
+        }
+
+        String token = jwtService.gerarToken(usuarioLogado);
+        usuarioLogadoDTO.setNome(usuarioLogado.getNome());
         usuarioLogadoDTO.setToken(token);
+        usuarioLogadoDTO.setCadastroFinalizado(usuarioLogado.getCadastroFinalizado());
 
         return usuarioLogadoDTO;
     }
@@ -80,11 +87,18 @@ public class UsuarioFacade {
         return usuarioDto;
     }
 
-    public void atualizar(UsuarioDTO usuarioDTO, String token) {
-        Usuario usuario = mapper.toEntity(usuarioDTO);
+    public void atualizar(UsuarioAtualizarDTO usuarioAtualizarDTO, String token) {
+        Usuario usuario = mapper.toEntityUsuarioAtualizar(usuarioAtualizarDTO);
         UUID uuid = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
 
         service.atualizar(usuario, uuid);
+    }
+
+    public void atualizarSenha(TrocarSenhaDTO trocarSenhaDTO, String token){
+        UUID uuid = buscarIdToken.getIdDoUsuarioDoTokenJWT(token);
+        AtualizarSenha atualizarSenha = mapper.toEntityAtualizarSenha(trocarSenhaDTO, uuid);
+
+        service.atualizarSenha(atualizarSenha, uuid);
     }
 
     public void deletar(String token) {
@@ -105,22 +119,10 @@ public class UsuarioFacade {
         return usuarioLogadoDTO;
     }
 
-    public UsuarioLogadoDTO autenticarGoogle(String tokenGoogle) throws JOSEException {
-        Usuario usuario = googleService.autenticarGoogle(tokenGoogle);
-        Usuario usuarioLogado = service.autenticarGoogle(usuario);
-        String token = jwtService.gerarToken(usuarioLogado);
-
-        UsuarioLogadoDTO usuarioLogadoDTO = new UsuarioLogadoDTO();
-        usuarioLogadoDTO.setNome(usuarioLogado.getNome());
-        usuarioLogadoDTO.setToken(token);
-
-        return usuarioLogadoDTO;
-    }
-
     public void validarEmail(EmailDTO emailDTO){
         EmailValidar email = mapper.toEntityEmail(emailDTO);
 
-        if(validacaoUsuarioService.verificarEmail(email)){
+        if(validacaoUsuarioService.verificarEmail(email.getEmail())){
             ValidacaoEmail validacaoEmail = gerarCodigo.gerarCodigoVerificacaoEmail(email.getEmail());
             emailService.validarEmail(validacaoEmail);
             validacaoUsuarioService.cadastrarEmailValidacao(validacaoEmail);
@@ -137,11 +139,11 @@ public class UsuarioFacade {
     public void esqueceuSenha(EmailDTO emailDTO){
         EmailValidar email = mapper.toEntityEmail(emailDTO);
 
-        if(!validacaoUsuarioService.verificarEmail(email)){
+        if(!validacaoUsuarioService.verificarEmail(email.getEmail())){
             UUID codigo = validacaoUsuarioService.gerarCodigoTrocarSenha(email);
             emailService.esqueceuSenha(email, codigo);
         } else{
-            throw new RuntimeException("usuario nao existe, primeiro cadastre");
+            throw new RuntimeException("Email não existe, é necessario cadastrar!");
         }
     }
 

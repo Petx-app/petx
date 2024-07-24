@@ -1,6 +1,7 @@
 package com.petx.service.usuario;
 
 import com.petx.domain.pet.Pet;
+import com.petx.domain.usuario.AtualizarSenha;
 import com.petx.domain.usuario.Usuario;
 import com.petx.domain.usuario.ValidacaoEmail;
 import com.petx.repository.PetRepository;
@@ -38,6 +39,7 @@ public class UsuarioService {
         if (optionalUsuario.isPresent()) {
             throw new RuntimeException("Usuario já existe");
         }
+        usuario.setCadastroFinalizado(true);
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         Optional<ValidacaoEmail> optionalValidacaoEmail = validacaoUsuarioRepository.findByEmail(usuario.getEmail());
         if(optionalValidacaoEmail.isPresent()) {
@@ -48,11 +50,11 @@ public class UsuarioService {
 
     public Usuario cadastrarGoogle(Usuario usuario) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail().toLowerCase());
-        if(optionalUsuario.isPresent()){
-            throw new RuntimeException("Usuario já existe");
+        if(optionalUsuario.isEmpty()){
+            usuario.setUuid(UUID.randomUUID());
+            return usuarioRepository.save(usuario);
         }
-        Usuario usuarioSalvo = usuarioRepository.save(usuario);
-        return usuarioSalvo;
+        return null;
     }
 
     public Usuario buscar(UUID uuid) {
@@ -68,11 +70,22 @@ public class UsuarioService {
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
             usuario.setNome(usuarioAtualizar.getNome());
-            usuario.setSenha(usuarioAtualizar.getSenha());
+            usuario.setEstado(usuarioAtualizar.getEstado());
+            usuario.setCidade(usuarioAtualizar.getCidade());
             usuario.setTelefone(usuarioAtualizar.getTelefone());
+            usuario.setCadastroFinalizado(true);
             usuarioRepository.save(usuario);
         } else {
             throw new EntityNotFoundException("Usuario nao encontrado");
+        }
+    }
+
+    public void atualizarSenha(AtualizarSenha atualizarSenha, UUID uuid){
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(uuid);
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+            usuario.setSenha(atualizarSenha.getSenha());
+            usuarioRepository.save(usuario);
         }
     }
 
@@ -117,12 +130,9 @@ public class UsuarioService {
     public Usuario autenticarGoogle(Usuario usuario) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(usuario.getEmail());
         if (optionalUsuario.isPresent()) {
-            Usuario usuarioBanco = optionalUsuario.get();
-            if (usuario.getEmail().equals(usuarioBanco.getEmail())) {
-                return usuarioBanco;
-            }
-            throw new RuntimeException("Email Incorreto");
+            return optionalUsuario.get();
+        } else{
+            throw new EntityNotFoundException("Usuario nao encontrado");
         }
-        throw new EntityNotFoundException("Usuario nao encontrado");
     }
 }

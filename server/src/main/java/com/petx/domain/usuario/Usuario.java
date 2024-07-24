@@ -24,10 +24,17 @@ public class Usuario {
 
     private String estado;
 
+    private String idGoogle;
+
+    private Boolean cadastroFinalizado;
+
     private LocalDateTime dtInclusao;
 
     @PrePersist
     protected void onCreate() {
         this.dtInclusao = LocalDateTime.now();
+        if (this.cadastroFinalizado == null) {
+            this.cadastroFinalizado = false;
+        }
     }
 }

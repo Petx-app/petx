@@ -1,21 +1,16 @@
 package com.petx.api.dto.Usuario;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
 import java.util.UUID;
 
 @Data
-public class UsuarioDTO {
+
+public class UsuarioAtualizarDTO {
 
     private UUID uuid;
-
-    @NotBlank
-    @NotNull
-    private String email;
-
-    @NotBlank
-    @NotNull
-    private String senha;
 
     @NotNull
     @NotBlank

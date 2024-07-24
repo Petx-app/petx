@@ -12,4 +12,6 @@ public class ListPetsDTO {
     String nome;
 
     String raca;
+
+    String imagem;
 }

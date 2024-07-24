@@ -68,12 +68,13 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/imagens/pets/**").permitAll()
                         .requestMatchers("/usuario/autenticar").permitAll()
                         .requestMatchers("/usuario/validar/email").permitAll()
                         .requestMatchers("/usuario/confirmar/email").permitAll()
                         .requestMatchers("/usuario/validar/esquecer-senha").permitAll()
                         .requestMatchers("/usuario/validar/link/**").permitAll()
-                        .requestMatchers("/usuario/validar/trocar-senha/**").permitAll()
+                        .requestMatchers("/usuario/validar/troca-senha/**").permitAll()
                         .requestMatchers("/usuario/autenticar/gmail").permitAll()
                         .requestMatchers("/usuario/cadastrar/gmail").permitAll()
                         .requestMatchers("/usuario").permitAll()
@@ -96,7 +97,7 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedMethods(all);
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://192.168.1.106:3000"));
         config.setAllowedHeaders(all);
         config.setAllowCredentials(true);
 

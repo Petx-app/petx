@@ -8,4 +8,6 @@ public class UsuarioLogadoDTO {
     private String nome;
 
     private String token;
+
+    private Boolean cadastroFinalizado;
 }

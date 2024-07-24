@@ -27,10 +27,11 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if(usuarioEncontrado == null){
             return null;
         }
+        String password = usuarioEncontrado.getSenha() != null ? usuarioEncontrado.getSenha() : "";
 
         return User.builder()
                 .username(usuarioEncontrado.getEmail())
-                .password(usuarioEncontrado.getSenha())
+                .password(password)
                 .roles("USER")
                 .build();
     }

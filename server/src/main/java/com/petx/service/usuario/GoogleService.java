@@ -11,40 +11,33 @@ import java.util.Map;
 @Service
 public class GoogleService {
 
-    private String googleEndPoint = "www.rota.com.br";
+    private String googleEndPoint = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
-    public Usuario cadastrarGoogle(String tokenGmail) {
+    public Usuario consultarUsuarioGoogle(String tokenGmail) {
         Map<String, Object> consultaURL = consultarGoogle(tokenGmail);
 
-        //ajustar apos a rota correta for especificada
-        String email = (String) consultaURL.get("email");
-        String nome = (String) consultaURL.get("name");
-        String telefone = (String) consultaURL.get("phone");
+        String verificado = (String) consultaURL.get("email_verified");
 
-        Usuario usuario = new Usuario();
-        usuario.setEmail(email);
-        usuario.setNome(nome);
-        usuario.setTelefone(telefone);
+        if("true".equals(verificado)){
+            String email = (String) consultaURL.get("email");
+            String nome = (String) consultaURL.get("name");
+            String sub = (String) consultaURL.get("sub");
 
-        return usuario;
-    }
+            Usuario usuario = new Usuario();
+            usuario.setEmail(email);
+            usuario.setNome(nome);
+            usuario.setIdGoogle(sub);
 
-    public Usuario autenticarGoogle(String tokenGmail) {
-        Map<String, Object> consultaURL = consultarGoogle(tokenGmail);
+            return usuario;
+        }
 
-        //ajustar apos a rota correta for especificada
-        String email = (String) consultaURL.get("email");
-
-        Usuario usuario = new Usuario();
-        usuario.setEmail(email);
-
-        return usuario;
+        throw new RuntimeException("erro ao se autenticar com google");
     }
 
     private Map<String, Object> consultarGoogle(String tokenGmail) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = String.format(googleEndPoint, tokenGmail);
+        String url = googleEndPoint + tokenGmail;
 
         try {
             return restTemplate.getForObject(url, Map.class);

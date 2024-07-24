@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.UUID;
 
 @SuppressWarnings("ALL")
@@ -39,9 +40,15 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity atualizar(@RequestHeader("Authorization") String token, @RequestBody @Valid UsuarioDTO usuarioDTO) {
-        facade.atualizar(usuarioDTO, token);
-        return ResponseEntity.ok("Usuario salvo");
+    public ResponseEntity atualizar(@RequestHeader("Authorization") String token, @RequestBody @Valid UsuarioAtualizarDTO usuarioAtualizarDTO) {
+        facade.atualizar(usuarioAtualizarDTO, token);
+        return ResponseEntity.ok("Dados atualizados!");
+    }
+
+    @PutMapping("/atualizaSenha")
+    public ResponseEntity atualizarSenha(@RequestHeader("Authorization") String token, @RequestBody @Valid TrocarSenhaDTO trocarSenhaDTO) {
+        facade.atualizarSenha(trocarSenhaDTO, token);
+        return ResponseEntity.ok("Nova Senha Atualizada!");
     }
 
     @DeleteMapping
@@ -54,13 +61,6 @@ public class UsuarioController {
     @PostMapping("/autenticar")
     public ResponseEntity<Object> autenticar(@RequestBody @Valid LoginUsuarioDTO loginUsuarioDTO) throws JOSEException {
         UsuarioLogadoDTO usuarioLogado = facade.autenticar(loginUsuarioDTO);
-        return ResponseEntity.ok(usuarioLogado);
-    }
-
-    @Tag(name = "Public API")
-    @PostMapping("/autenticar/gmail")
-    public ResponseEntity<Object> autenticarGmail(@RequestBody String token) throws JOSEException {
-        UsuarioLogadoDTO usuarioLogado = facade.autenticarGoogle(token);
         return ResponseEntity.ok(usuarioLogado);
     }
 
@@ -81,7 +81,7 @@ public class UsuarioController {
     @PostMapping("/validar/esquecer-senha")
     public ResponseEntity<Object> esqueceuSenha(@RequestBody @Valid EmailDTO emailDTO) {
         facade.esqueceuSenha(emailDTO);
-        return ResponseEntity.ok("email enviado");
+        return ResponseEntity.ok("Email enviado!");
     }
 
     @Tag(name = "Public API")
@@ -92,9 +92,9 @@ public class UsuarioController {
     }
 
     @Tag(name = "Public API")
-    @PutMapping("/validar/trocar-senha/{codigoValidacao}")
+    @PutMapping("/validar/troca-senha/{codigoValidacao}")
     public ResponseEntity<Object> trocarSenha(@RequestBody @Valid TrocarSenhaDTO trocarSenhaDTO, @PathVariable UUID codigoValidacao ) {
         facade.trocarSenha(trocarSenhaDTO, codigoValidacao);
-        return ResponseEntity.ok("senha trocada");
+        return ResponseEntity.ok("Senha atualizada!");
     }
 }

@@ -19,6 +19,10 @@ public class Pet {
     @JoinColumn(name = "uuid_dono")
     private Usuario dono;
 
+    @OneToOne
+    @JoinColumn
+    private PetImagem image;
+
     private String nome;
 
     private String especie;

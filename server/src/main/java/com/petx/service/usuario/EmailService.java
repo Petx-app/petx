@@ -58,7 +58,7 @@ public class EmailService {
 
     public void esqueceuSenha(EmailValidar email, UUID codigoValidcao){
 
-        String link = "http://localhost:8080/usuario/validar/trocar-senha/";
+        String link = "http://localhost:3000/trocaSenha?tag=";
 
         try {
             Session session = configureSession();

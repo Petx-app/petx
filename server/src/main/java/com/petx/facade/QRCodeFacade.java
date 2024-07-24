@@ -18,7 +18,8 @@ public class QRCodeFacade {
     public QRCodeDTO buscarQRCode(UUID uuid) throws PetNotCadastro {
         Pet pet = service.buscarQRCode(uuid);
         Usuario usuario = pet.getDono();
-        QRCodeDTO QRCodeDTO = new QRCodeDTO(pet.getNome(), pet.getEspecie(), usuario.getNome(), usuario.getTelefone());
+
+        QRCodeDTO QRCodeDTO = new QRCodeDTO(pet.getNome(), pet.getEspecie(), usuario.getNome(), usuario.getTelefone(), pet.getImage().getNomeImagem());
         return QRCodeDTO;
     }
 }

@@ -1,13 +1,22 @@
 package com.petx.service.pet;
 
 import com.petx.domain.pet.Pet;
+import com.petx.domain.pet.PetImagem;
 import com.petx.domain.usuario.Usuario;
+import com.petx.repository.PetImageRepository;
 import com.petx.repository.PetRepository;
 import com.petx.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +31,17 @@ public class PetService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public void cadastrar(Pet novoPet, UUID uuidDono) {
+    @Autowired
+    private PetImageRepository petImageRepository;
+
+    @Autowired
+    private PetImageService petImageService;
+
+    @Value("${base.url.imagem.pets}")
+    private String caminholinkImagem;
+
+
+    public void cadastrar(Pet novoPet, UUID uuidDono) throws IOException {
         UUID uuid = novoPet.getUuid();
 
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
@@ -46,6 +65,7 @@ public class PetService {
             } else {
                 throw new RuntimeException("Usuario com id nao encontrado");
             }
+
             petRepository.save(pet);
         } else {
             throw new RuntimeException("Nao foi possivel salvar pet");
@@ -53,11 +73,16 @@ public class PetService {
     }
 
     public List<Pet> buscarTodos(UUID uuidDono) throws EntityNotFoundException {
-        List<Pet> pets = petRepository.findByDonoUuid(uuidDono);
-        if (!pets.isEmpty()) {
-            return pets;
+         List<Pet> listPet = petRepository.findByDonoUuid(uuidDono);
+
+        for (Pet pet : listPet) {
+            if(pet.getImage() != null) {
+                String novoNomeImagem = caminholinkImagem + pet.getImage().getNomeImagem();
+                pet.getImage().setNomeImagem(novoNomeImagem);
+            }
         }
-        throw new EntityNotFoundException("Nao tem pet cadastrado");
+
+        return listPet;
     }
 
     public Pet buscarUUID(UUID uuid, UUID uuidDono) throws EntityNotFoundException {
@@ -68,10 +93,11 @@ public class PetService {
         throw new EntityNotFoundException("pet nao encontrado");
     }
 
-    public void deletar(UUID uuid, UUID uuidDono) throws EntityNotFoundException {
+    public void deletar(UUID uuid, UUID uuidDono) throws EntityNotFoundException, IOException {
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
         if (optionalPet.isPresent() && optionalPet.get().getCadastrado() && (Objects.equals(optionalPet.get().getDono().getUuid(), uuidDono))) {
             Pet pet = optionalPet.get();
+            PetImagem petImagem = pet.getImage();
             pet.setDono(null);
             pet.setNome(null);
             pet.setEspecie(null);
@@ -82,13 +108,21 @@ public class PetService {
             pet.setGenero(null);
             pet.setCadastrado(false);
             pet.setDataNascimento(null);
+
+            if(pet.getImage() != null) {
+                pet.setImage(null);
+                petImageService.deletarImagem(petImagem.getNomeImagem());
+                petImageRepository.deleteById(petImagem.getId());
+            }
+
             petRepository.save(pet);
+
         } else {
             throw new EntityNotFoundException("Pet nao encontrado para delete");
         }
     }
 
-    public void atualizar(Pet atualizarPet, UUID uuidDono) throws EntityNotFoundException {
+    public void atualizar(Pet atualizarPet, UUID uuidDono) throws EntityNotFoundException, IOException {
         UUID uuid = atualizarPet.getUuid();
 
         Optional<Pet> optionalPet = petRepository.findByUuid(uuid);
@@ -105,7 +139,37 @@ public class PetService {
             pet.setDataCadastro(atualizarPet.getDataCadastro());
             petRepository.save(pet);
         } else {
-            throw new EntityNotFoundException("pet nao encontrado para ser Atualizado");
+            throw new EntityNotFoundException("Pet não encontrado para ser atualizado");
         }
     }
+
+    public void cadastrarImagemPet(PetImagem petImagemNova) throws IOException {
+        Optional<Pet> optionalPetImagem = petRepository.findByUuid(petImagemNova.getUuidPet());
+        if(optionalPetImagem.isPresent()){
+            Pet pet = optionalPetImagem.get();
+            petImageService.salvarImagem(petImagemNova);
+            PetImagem imagemSalvo = petImageRepository.save(petImagemNova);
+            pet.setImage(imagemSalvo);
+            petRepository.save(pet);
+        }else{
+            throw new RuntimeException("erro ao atualizar imagem");
+        }
+    }
+
+    public void atualizarImagemPet(PetImagem petImagemAtualizar) throws IOException {
+        Optional<Pet> optionalPetImagem = petRepository.findByUuid(petImagemAtualizar.getUuidPet());
+        if(optionalPetImagem.isPresent()){
+            Pet petAntigo = optionalPetImagem.get();
+            petImageService.atualizarImagem(petImagemAtualizar, petAntigo.getImage());
+
+            Optional<PetImagem> optionalImagemAntiga = petImageRepository.findById(petAntigo.getImage().getId());
+            PetImagem atualizaImagem = new PetImagem();
+            atualizaImagem.setId(optionalImagemAntiga.get().getId());
+            atualizaImagem.setNomeImagem(petImagemAtualizar.getNomeImagem());
+            petImageRepository.save(atualizaImagem);
+        }else{
+            throw new RuntimeException("erro ao atualizar imagem");
+        }
+    }
+
 }

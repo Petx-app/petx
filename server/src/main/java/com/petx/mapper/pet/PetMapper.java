@@ -1,18 +1,26 @@
 package com.petx.mapper.pet;
 
+import com.petx.api.dto.pet.ImagemPetDTO;
 import com.petx.api.dto.pet.PetDTO;
 import com.petx.domain.pet.Pet;
+import com.petx.domain.pet.PetImagem;
 import com.petx.domain.usuario.Usuario;
 import com.petx.mapper.usuario.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class PetMapper {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+
+    @Value("${base.url.imagem.pets}")
+    private String caminhoImagemPet;
 
     public Pet toEntity(PetDTO dto) {
         Pet entity = new Pet();
@@ -44,6 +52,13 @@ public class PetMapper {
         }
         PetDTO dto = new PetDTO();
         dto.setNome(pet.getNome());
+
+        if (pet.getImage() != null) {
+            dto.setLinkImagem(caminhoImagemPet + pet.getImage().getNomeImagem());
+        } else {
+            dto.setLinkImagem(null);
+        }
+
         dto.setEspecie(pet.getEspecie());
         dto.setRaca(pet.getRaca());
         dto.setCor(pet.getCor());
@@ -55,5 +70,14 @@ public class PetMapper {
         dto.setDataCadastro(pet.getDataCadastro());
 
         return dto;
+    }
+
+    public PetImagem toEntityPetImage(ImagemPetDTO dto) {
+        PetImagem imagem = new PetImagem();
+        imagem.setNomeImagem(UUID.randomUUID() + ".webp");
+        imagem.setArquivo(dto.getImagemPet());
+        imagem.setUuidPet(dto.getUuid());
+
+        return imagem;
     }
 }
