@@ -1,11 +1,14 @@
 const QrcodePetCadastradoOrganisms = ({ dadosPet }) => {
+
+  const linkImage = `${process.env.NEXT_PUBLIC_BACK_APP_API_URL}${dadosPet.imagemPet}`;
+  console.log(linkImage)
   return (
     <div className="h-full w-full flex flex-col font-roboto py-6 md:py-10 justify-center items-center">
       <h1 className="text-custom-blue font-bold text-2xl md:text-3xl">
         Dados do pet:
       </h1>
 
-      <div className="h-full w-full flex flex-col justify-start items-center mt-4 md:mt-5 gap-4 md:gap-10">
+      <div className="h-full w-full flex flex-col justify-start items-center mt-4 md:mt-5 pt-2 gap-4 md:gap-5">
         <div className="w-full md:w-3/4 h-auto flex flex-col justify-center">
           <label
             className="w-full text-white font-semibold text-sm md:text-md"
@@ -45,6 +48,7 @@ const QrcodePetCadastradoOrganisms = ({ dadosPet }) => {
             </p>
           </div>
         </div>
+        <img src={linkImage} alt="" className="w-44 h-44 object-cover" />
       </div>
 
       <div className="w-full md:w-3/4 h-auto bg-custom-blue flex justify-center items-center p-4 md:p-5 rounded-md mt-4 md:mt-6">
