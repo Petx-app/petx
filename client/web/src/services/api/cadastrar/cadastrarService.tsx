@@ -1,4 +1,5 @@
 import api from "@/services/axios";
+import Cookies from "js-cookie";
 
 export const confirmEmail = async (data: any) => {
   try {
@@ -17,7 +18,8 @@ export const confirmEmail = async (data: any) => {
 
 export const cadastrar = async (data: any) => {
   try {
-    await api.post("/usuario", data);
+    const response = await api.post("/usuario", data);
+    Cookies.set("auth", response.data.token, { expires: 7 });
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message;

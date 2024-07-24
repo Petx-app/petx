@@ -4,16 +4,16 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const QRCode = () => {
-  const router = useRouter();
-  const { tag } = router.query;
+  const route = useRouter();
+  const { tag } = route.query;
 
   useEffect(() => {
-    if (router.isReady) {
+    if (route.isReady) {
       if (!tag || !ValidateUUID(tag)) {
-        router.push("/login");
+        route.push("/notFound");
       }
     }
-  }, [router.isReady, tag]);
+  }, [route.isReady, tag]);
 
   return (
     <>

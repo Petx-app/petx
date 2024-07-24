@@ -14,9 +14,10 @@ const config: Config = {
       }, 
       colors: {
         'glass-blue': 'rgba(173, 216, 230, 0.6)',
-        'custom-blue':'#185E8D', //texto
+        'glass-yellow': 'rgba(245, 207, 70, 0.6)', 
+        'custom-blue':'#185E8D', 
         'custom-blue-2':'#59C2DD',
-        'custom-yellow': '#F5CF46', //texto
+        'custom-yellow': '#F5CF46', 
       },
       backdropBlur: {
         xs: '2px',

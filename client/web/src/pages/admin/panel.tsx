@@ -3,6 +3,7 @@ import { useAuth } from "@/context/authContext";
 import { consultarCookieAuth } from "@/utils/checkCookies";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 const panelAdmin = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const panelAdmin = () => {
   return (
     <>
       <PanelTemplate title={"Administrador"} />
+      <ToastContainer />
     </>
   );
 };

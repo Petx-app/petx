@@ -1,4 +1,5 @@
 import { consultarTokenAuthService } from "@/services/api/auth/authService";
+import { ValidateUUID } from "./validateUUID";
 import Cookies from "js-cookie";
 
 export const consultaCookieEmail = () => {
@@ -23,3 +24,22 @@ export const consultarCookieAuth = () => {
   }
   return false;
 };
+
+export const consultaCookieQRCode = () => {
+  const uuidQRCodePet = Cookies.get("uuid_qrcode");
+  if (uuidQRCodePet) {
+    if (ValidateUUID(uuidQRCodePet)) {
+      return uuidQRCodePet;
+    }
+    return "";
+  }
+  return "";
+};
+
+
+export const consultaCookieEstadoCadastroUsuario = () => {
+  const estadoCadastro = Cookies.get("formCadastro");
+  if(estadoCadastro == "true"){
+    return true;
+  }
+}

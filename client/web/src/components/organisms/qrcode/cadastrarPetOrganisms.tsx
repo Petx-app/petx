@@ -5,7 +5,7 @@ const QrcodeCadastrarPetOrganisms = ({ uuid, logo }) => {
   const router = useRouter();
 
   const gravarUUID = () => {
-    Cookies.set("UUID_QRCODE", uuid, { expires: 1 });
+    Cookies.set("uuid_qrcode", uuid, { expires: 1 });
     router.push("/login");
   };
 

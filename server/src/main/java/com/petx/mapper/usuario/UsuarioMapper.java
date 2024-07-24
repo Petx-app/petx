@@ -1,13 +1,11 @@
 package com.petx.mapper.usuario;
 
 import com.petx.api.dto.Usuario.*;
-import com.petx.domain.usuario.CodigoValidacaoEmail;
-import com.petx.domain.usuario.EmailValidar;
-import com.petx.domain.usuario.TrocarSenha;
-import com.petx.domain.usuario.Usuario;
+import com.petx.domain.usuario.*;
 import com.petx.utils.Criptografia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 @Component
@@ -33,6 +31,23 @@ public class UsuarioMapper {
         entity.setTelefone(dto.getTelefone());
         entity.setCidade(dto.getCidade());
         entity.setEstado(dto.getEstado());
+
+        return entity;
+    }
+
+    public Usuario toEntityUsuarioAtualizar(UsuarioAtualizarDTO dto) {
+        Usuario entity = new Usuario();
+        entity.setNome(dto.getNome());
+        entity.setTelefone(dto.getTelefone());
+        entity.setCidade(dto.getCidade());
+        entity.setEstado(dto.getEstado());
+
+        return entity;
+    }
+
+    public AtualizarSenha toEntityAtualizarSenha(TrocarSenhaDTO dto, UUID uuid) {
+        AtualizarSenha entity = new AtualizarSenha();
+        entity.setSenha(criptografia.criptogafarSenha(dto.getSenha(), uuid));
 
         return entity;
     }

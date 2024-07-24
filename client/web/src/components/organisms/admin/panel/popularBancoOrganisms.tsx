@@ -1,22 +1,15 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { gerarQRCode } from "@/services/api/admin/panel/panelAdminService";
+import { toast } from "react-toastify";
+import { gerarQRCode } from "../utils";
 
-const PopularBancoOrganisms = ({ fetchRegistros }) => {
+const PopularBancoOrganisms = ({ setFetchStateRegistro }) => {
   const [qtd, setQtd] = useState<number>(0);
 
   const handleGerarQRCode = async () => {
     if (qtd > 0) {
-      try {
-        await gerarQRCode(qtd);
-        toast.success(qtd + " QRCode gerado(s)");
-        setQtd(0);
-        fetchRegistros();
-      } catch (e: any) {
-        toast.error(e.message);
-      }
+      gerarQRCode(qtd, setQtd, setFetchStateRegistro);
     } else {
-      toast.error("Cadastre um numero valido");
+      toast.error("Cadastre um número válido");
     }
   };
 
@@ -27,46 +20,44 @@ const PopularBancoOrganisms = ({ fetchRegistros }) => {
   };
 
   return (
-    <>
-      <div className="w-full h-auto flex flex-col border border-custom-blue border-solid p-5 rounded-2xl shadow-md">
-        <h2 className=" text-xl">Registrar pet no banco:</h2>
-        <label htmlFor="" className="text-sm">
-          Quantidade:
-        </label>
-        <div className="flex">
-          <div className="w-auto h-auto flex rounded-sm">
-            <button
-              onClick={() => {
-                if (qtd > 0) setQtd(qtd - 1);
-              }}
-              className="bg-slate-200 w-10 text-black rounded-l-md"
-            >
-              -
-            </button>
-            <input
-              type="text"
-              className="w-1/2 h-10 px-3 py-2 border border-slate-200 focus:outline-none focus:ring-2 dark:bg-black white:bg-white "
-              value={qtd}
-              onChange={handleInputChange}
-            />
-            <button
-              onClick={() => {
-                setQtd(qtd + 1);
-              }}
-              className="bg-slate-200 w-10 text-black rounded-r-md"
-            >
-              +
-            </button>
-          </div>
+    <div className="w-full h-auto flex flex-col border border-custom-blue border-solid p-5 rounded-2xl shadow-md">
+      <h2 className="text-xl mb-3">Registrar pet no banco:</h2>
+      <label htmlFor="" className="text-sm mb-2">
+        Quantidade:
+      </label>
+      <div className="flex flex-col sm:flex-row items-center sm:items-start">
+        <div className="w-full sm:w-auto h-auto flex rounded-sm mb-3 sm:mb-0">
           <button
-            className="w-1/3 bg-custom-blue p-2 ml-2 rounded-md text-white"
-            onClick={handleGerarQRCode}
+            onClick={() => {
+              if (qtd > 0) setQtd(qtd - 1);
+            }}
+            className="bg-slate-200 w-10 text-black rounded-l-md"
           >
-            Gerar
+            -
+          </button>
+          <input
+            type="text"
+            className="w-full text-center md:text-start sm:w-1/2 h-10 px-3 py-2 border border-slate-200 focus:outline-none focus:ring-2 dark:bg-black white:bg-white"
+            value={qtd}
+            onChange={handleInputChange}
+          />
+          <button
+            onClick={() => {
+              setQtd(qtd + 1);
+            }}
+            className="bg-slate-200 w-10 text-black rounded-r-md"
+          >
+            +
           </button>
         </div>
+        <button
+          className="w-full sm:w-1/3 bg-custom-blue p-2 sm:ml-2 rounded-md text-white"
+          onClick={handleGerarQRCode}
+        >
+          Gerar
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

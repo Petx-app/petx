@@ -7,6 +7,8 @@ import { cadastrar } from "@/services/api/cadastrar/cadastrarService";
 import { useEffect, useState } from "react";
 import LabeledInput from "@/components/molecules/labeledinput";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { cadastrarUsuario } from "./utils";
 
 type DataInput = {
   nome: string;
@@ -20,6 +22,7 @@ type DataInput = {
 
 const FormCadastrarUsuarioOrganisms = ({ email }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const route = useRouter();
 
   const {
     register,
@@ -37,15 +40,9 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
     if (!error) {
       const { senhaConfirmar, ...dataSemConfirmar } = data;
       const finalData = { ...dataSemConfirmar, email };
-      try {
-        await cadastrar(finalData);
-        alert("usuario cadastrado");
-      } catch (e) {
-        setErrorMessage(e.message);
-        console.log(errorMessage);
-      }
+      cadastrarUsuario(finalData, route);
     } else {
-      toast.error(error);
+      setErrorMessage(error);
     }
   };
 
@@ -71,6 +68,8 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             height={"h-10"}
             register={register}
             name={"nome"}
+            error={errors.nome}
+            textShow={""}
           />
 
           <LabeledInput
@@ -78,12 +77,15 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             label={"Telefone"}
             color={"text-custom-blue"}
             fontSize={"text-xl"}
-            type={"text"}
+            type={"telephone"}
             placeholder={"Digite um número que possua WhatsApp para contato"}
             width={"w-full"}
             height={"h-10"}
             register={register}
             name={"telefone"}
+            maxLength={11}
+            minLength={11}
+            textShow={""}
           />
 
           <LabeledInput
@@ -97,6 +99,8 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             height={"h-10"}
             register={register}
             name={"cidade"}
+            error={errors.cidade}
+            textShow={""}
           />
 
           <LabeledInput
@@ -110,6 +114,9 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             height={"h-10"}
             register={register}
             name={"estado"}
+            maxLength={25}
+            error={errors.estado}
+            textShow={""}
           />
 
           <LabeledInput
@@ -123,6 +130,10 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             height={"h-10"}
             register={register}
             name={"senha"}
+            minLength={4}
+            maxLength={50}
+            error={errors.senha}
+            textShow={""}
           />
 
           <LabeledInput
@@ -136,7 +147,12 @@ const FormCadastrarUsuarioOrganisms = ({ email }) => {
             height={"h-10"}
             register={register}
             name={"senhaConfirmar"}
+            minLength={4}
+            maxLength={50}
+            error={errors.senhaConfirmar}
+            textShow={""}
           />
+          {errorMessage && <p className="text-red-400"> {errorMessage}</p>}
 
           <div className="w-full h-full flex justify-end items-center mt-5">
             <button

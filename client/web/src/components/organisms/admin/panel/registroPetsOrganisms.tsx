@@ -1,39 +1,32 @@
 import { useEffect, useState } from "react";
-import { consultarRegistroPet } from "@/services/api/admin/panel/panelAdminService";
-import { toast } from "react-toastify";
+import { consultaRegistroPet } from "../utils";
 
 const RegistroPetsOrganisms = ({ fetchState }) => {
-  const [petsCadastrados, setPetsCadastrados] = useState<String>();
-  const [QRCodeGerado, setQRCodeGerado] = useState<String>();
-  const [QRCodeDisponiveis, setQRCodeDisponiveis] = useState<String>();
+  const [petsCadastrados, setPetsCadastrados] = useState<string>();
+  const [QRCodeGerado, setQRCodeGerado] = useState<string>();
+  const [QRCodeDisponiveis, setQRCodeDisponiveis] = useState<string>();
 
   useEffect(() => {
-    const consultarRegistros = async () => {
-      try {
-        const response = await consultarRegistroPet();
-        setPetsCadastrados(response.petCadastrado);
-        setQRCodeGerado(response.qrcodeGerado);
-        setQRCodeDisponiveis(response.disponivel);
-      } catch (e: any) {
-        toast.error(e.message);
-      }
-    };
-    consultarRegistros();
+    consultaRegistroPet(
+      setPetsCadastrados,
+      setQRCodeGerado,
+      setQRCodeDisponiveis,
+    );
   }, [fetchState]);
 
   return (
-    <div className="w-full h-40 flex justify-between items-center border border-custom-blue border-solid p-5 rounded-2xl shadow-md">
-      <div className="w-auto h-auto flex flex-col gap-4 items-center font-roboto">
+    <div className="w-full h-auto md:h-40 flex flex-col md:flex-row justify-between items-center border border-custom-blue border-solid p-5 rounded-2xl shadow-md gap-4">
+      <div className="w-full lg:w-auto h-auto flex flex-col gap-4 items-center font-roboto">
         <p>Pets Cadastrados</p>
-        <p className="text-4xl">{petsCadastrados}</p>
+        <p className="text-2xl lg:text-4xl">{petsCadastrados}</p>
       </div>
-      <div className="w-auto h-auto flex flex-col gap-4 items-center">
+      <div className="w-full lg:w-auto h-auto flex flex-col gap-4 items-center">
         <p>QRCodes gerados</p>
-        <p className="text-4xl">{QRCodeGerado}</p>
+        <p className="text-2xl lg:text-4xl">{QRCodeGerado}</p>
       </div>
-      <div className="w-auto h-auto flex flex-col gap-4 items-center">
-        <p>QRCodes disponiveis</p>
-        <p className="text-4xl">{QRCodeDisponiveis}</p>
+      <div className="w-full lg:w-auto h-auto flex flex-col gap-4 items-center">
+        <p>QRCodes disponíveis</p>
+        <p className="text-2xl lg:text-4xl">{QRCodeDisponiveis}</p>
       </div>
     </div>
   );

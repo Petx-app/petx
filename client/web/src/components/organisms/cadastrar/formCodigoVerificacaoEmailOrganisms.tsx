@@ -1,26 +1,29 @@
-import { useState } from "react";
-import { confirmEmail } from "@/services/api/cadastrar/cadastrarService";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import LabeledInput from "@/components/molecules/labeledinput";
-import { validar } from "@/services/api/login/loginService";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { reenviarCodigoDeVerificacao, validarCodigoVerificacao } from "./utils";
+
+type Props = {
+  email: string;
+  setStateForm: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 type DataInput = {
   codigoVerificacao: string;
+  email: string;
 };
 
-const FormCodigoVerificacaoEmailOrganisms = ({
+const FormCodigoVerificacaoEmailOrganisms: React.FC<Props> = ({
   email,
-  onConfirmSuccess,
-}: string) => {
-  const router = useRouter();
-
+  setStateForm,
+}) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [buttonLoadingReenviarEmail, setButtonLoadingReenviarEmail] =
     useState<boolean>(true);
   const [timeRemaining, setTimeRemaining] = useState<number>(60);
   const [buttonValidarState, setButtonValidarState] = useState<boolean>(true);
+  const route = useRouter();
 
   const {
     register,
@@ -29,48 +32,26 @@ const FormCodigoVerificacaoEmailOrganisms = ({
     reset,
   } = useForm<DataInput>();
 
-  const periodoReenviarEmail = () => {
-    setButtonLoadingReenviarEmail(false);
-    setTimeRemaining(60);
-    const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev === 1) {
-          clearInterval(interval);
-          setButtonLoadingReenviarEmail(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
   const reenviarEmail = async () => {
-    try {
-      toast.success("Email enviado com sucesso!");
-      periodoReenviarEmail();
-      await validar({ email });
-      setButtonValidarState(true);
-    } catch (e) {
-      console.log(e);
-    }
+    reenviarCodigoDeVerificacao({
+      email,
+      setButtonValidarState,
+      setButtonLoadingReenviarEmail,
+      setTimeRemaining,
+      timeRemaining,
+    });
   };
 
-  const onSubmit = async (data: any) => {
-    try {
-      await confirmEmail({ ...data, email });
-      setButtonLoadingReenviarEmail(true);
-      onConfirmSuccess();
-    } catch (e) {
-      if (e.message == "Codigo incorreto") {
-        setErrorMessage(e.message);
-      } else if (e.message == "Codigo expirado") {
-        setErrorMessage(e.message);
-        setButtonValidarState(false);
-      }
-      if (e.message == "Erro ao salvar usuario sem autenticar") {
-        router.push("/login");
-      }
-    }
+  const onSubmit = async (data: DataInput) => {
+    data = { ...data, email };
+    validarCodigoVerificacao({
+      data,
+      setButtonLoadingReenviarEmail,
+      setStateForm,
+      setErrorMessage,
+      setButtonValidarState,
+      route,
+    });
   };
 
   return (
@@ -129,8 +110,8 @@ const FormCodigoVerificacaoEmailOrganisms = ({
 
             <button
               type="submit"
-              disabled={buttonValidarState ? false : true}
-              className={`w-full sm:w-1/3 h-full shadow rounded-xl text-white text-2xl mt-4 sm:mt-0 ${buttonValidarState ? "bg-custom-blue" : "bg-gray-400"}`}
+              disabled={!buttonValidarState}
+              className={`w-full sm:w-1/3 h-full p-2 shadow rounded-xl text-white text-2xl mt-4 sm:mt-0 ${buttonValidarState ? "bg-custom-blue" : "bg-gray-400"}`}
             >
               Validar
             </button>

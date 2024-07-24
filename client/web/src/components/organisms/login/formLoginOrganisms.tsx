@@ -1,16 +1,22 @@
 import { useForm } from "react-hook-form";
-import { autenticar } from "@/services/api/login/loginService";
-import { ToastContainer, toast } from "react-toastify";
 import LabeledInput from "@/components/molecules/labeledinput";
 import { useRouter } from "next/router";
+import BackgroundLogin from "@/components/atoms/backgroundLogin";
+import { autenticaUsuario, autenticarGoogleUsuario } from "./utils";
+import Spinnerloading from "@/components/atoms/spinner";
+import { useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
+import { toast } from "react-toastify";
 
 type DataInput = {
   email: string;
   senha: string;
 };
 
-const FormLoginOrganisms = ({ onCriarContaClick }) => {
+const FormLoginOrganisms = ({ setStateRender }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const route = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -19,17 +25,19 @@ const FormLoginOrganisms = ({ onCriarContaClick }) => {
   } = useForm<DataInput>();
 
   const onSubmit = async (data: any) => {
-    try {
-      await autenticar(data);
-      route.push('/dashboard')
-    } catch (e) {
-      toast.error(e.message);
-    }
+    setLoading(true);
+    autenticaUsuario(data, setLoading, route);
   };
+
+  const autenticarGoogle = async (credential: any) => {
+    autenticarGoogleUsuario(credential, route)
+  }
 
   return (
     <>
-      <div className="relative w-full lg:w-2/3 xl:w-1/2 h-full flex flex-col bg-glass-blue backdrop-blur-md justify-center items-center sm:rounded-xl lg:rounded-l-xl lg:rounded-none">
+      <div
+        className={`relative w-full lg:w-2/3 xl:w-1/2 h-full flex flex-col bg-glass-blue backdrop-blur-md justify-center items-center sm:rounded-xl lg:rounded-l-xl lg:rounded-none transition-transform duration-300 ease-in-out`}
+      >
         <h1 className="mb-5 lg:mb-0 w-4/5 text-4xl font-roboto font-bold text-custom-blue">
           Login
         </h1>
@@ -46,8 +54,7 @@ const FormLoginOrganisms = ({ onCriarContaClick }) => {
               height={"h-12"}
               register={register}
               name={"email"}
-              error={errors.email}
-            />
+              error={errors.email} textShow={""}            />
           </div>
           <div className="mb-4">
             <LabeledInput
@@ -62,35 +69,51 @@ const FormLoginOrganisms = ({ onCriarContaClick }) => {
               register={register}
               name={"senha"}
               error={errors.senha}
-              maxLength={20}
-            />
+              maxLength={20} textShow={""}            />
           </div>
-
-          <p className="text-xs font-semibold font-roboto text-custom-blue cursor-pointer">
-            Esqueci minha senha
-          </p>
-
           <button
-            className="w-full h-12 bg-custom-blue text-m font-roboto rounded-md text-custom-yellow mt-7 mb-4"
-            type="submit"
+            className="text-xs font-semibold font-roboto text-custom-blue cursor-pointer"
+            onClick={() => setStateRender("esqueceuSenha")}
+            type="button"
           >
-            Entrar
+            Esqueci minha senha
           </button>
 
-          <div className="w-full flex gap-4">
+          <button
+            className="w-full h-12 bg-custom-blue text-m font-roboto rounded-md text-custom-yellow mt-2 mb-4 flex justify-center items-center"
+            type="submit"
+          >
+            {loading ? (
+              <Spinnerloading cor={"amarelo"} width={"w-5"} />
+            ) : (
+              "Entrar"
+            )}
+          </button>
+
+          <div className="w-full flex md:flex-row flex-col gap-4">
             <button
-              className="w-1/2 h-12 bg-custom-yellow text-m font-roboto rounded-md"
-              onClick={onCriarContaClick}
+              className="md:w-1/2 w-full h-10 bg-custom-yellow text-m font-roboto rounded-sm"
+              onClick={() => setStateRender("validarEmail")}
             >
               Criar uma conta
             </button>
-            <button className="w-1/2 h-12 bg-custom-yellow text-m font-roboto rounded-md">
-              Entrar com google
-            </button>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                autenticarGoogle(credentialResponse.credential)
+              }}
+              onError={() => {
+                toast.success("Erro ao se conectar com Google.")
+              }}
+              useOneTap
+              type="standard"
+              theme="outline"
+              shape="square"
+              size="large"
+              />
           </div>
         </form>
       </div>
-      <ToastContainer />
+      <BackgroundLogin />
     </>
   );
 };

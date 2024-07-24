@@ -1,59 +1,42 @@
 import api from "@/services/axios";
 
-export const finalizarQRCode = async (uuid: string) => {
-  try {
-    await api.put(`/admin/qrcode/${uuid}`);
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message;
-      throw new Error(errorMessage);
-    } else {
-      console.error("Erro desconhecido:", error);
-      throw new Error("Erro desconhecido");
-    }
-  }
-};
+const adminBaseUrl = "/admin";
 
-export const consultarQRCodeDisponiveis = async () => {
-  try {
-    const response = await api.get(`/admin/uuid-disponiveis`);
+async function requestWithBaseUrl({ url, ...options }) {
+  return api.request({
+    url: `${adminBaseUrl}${url}`,
+    ...options,
+  });
+}
+
+export const adminApi = {
+  finalizarQRCode: async function (uuid: string) {
+    await requestWithBaseUrl({
+      url: `/qrcode/${uuid}`,
+      method: "PUT",
+    });
+  },
+
+  consultarQRCodeDisponiveis: async function () {
+    const response = await requestWithBaseUrl({
+      url: `/uuid-disponiveis`,
+      method: "GET",
+    });
     return response.data;
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message;
-      throw new Error(errorMessage);
-    } else {
-      console.error("Erro desconhecido:", error);
-      throw new Error("Erro desconhecido");
-    }
-  }
-};
+  },
 
-export const gerarQRCode = async (qtd: number) => {
-  try {
-    await api.post(`/admin/pet/${qtd}`);
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message;
-      throw new Error(errorMessage);
-    } else {
-      console.error("Erro desconhecido:", error);
-      throw new Error("Erro desconhecido");
-    }
-  }
-};
+  gerarQRCode: async function (qtd: number) {
+    await requestWithBaseUrl({
+      url: `/pet/${qtd}`,
+      method: "POST",
+    });
+  },
 
-export const consultarRegistroPet = async () => {
-  try {
-    const response = await api.get(`/admin/dados-pets`);
+  consultarRegistroPet: async function () {
+    const response = await requestWithBaseUrl({
+      url: `/dados-pets`,
+      method: "GET",
+    });
     return response.data;
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message;
-      throw new Error(errorMessage);
-    } else {
-      console.error("Erro desconhecido:", error);
-      throw new Error("Erro desconhecido");
-    }
-  }
+  },
 };

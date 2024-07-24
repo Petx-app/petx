@@ -1,11 +1,8 @@
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import Cookies from "js-cookie";
-import { autenticarAdmin } from "@/services/api/admin/login/loginAdminService";
 import LabeledInput from "@/components/molecules/labeledinput";
+import { autenticar } from "../utils";
 
 type DataInput = {
   usuario: string;
@@ -14,7 +11,7 @@ type DataInput = {
 
 const FormLoginAdminOrganisms = () => {
   const { isAuth } = useAuth();
-  const router = useRouter();
+  const route = useRouter();
 
   const {
     register,
@@ -23,21 +20,9 @@ const FormLoginAdminOrganisms = () => {
     reset,
   } = useForm<DataInput>();
 
-  useEffect(() => {
-    Cookies.remove("auth");
-  }, []);
-
   const onSubmit = async (data: any) => {
-    try {
-      console.log(data);
-      await autenticarAdmin(data);
-      isAuth(true);
-      router.push({
-        pathname: "/admin/panel",
-      });
-    } catch (e: any) {
-      toast.error(e.message);
-    }
+    autenticar(data, route);
+    isAuth(true);
   };
 
   return (

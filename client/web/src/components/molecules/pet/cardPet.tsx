@@ -1,32 +1,36 @@
 import { useEffect, useState } from "react";
-import cachorro from "../../../../public/cachorro_teste.jpeg";
 import {
   TbSquareRoundedArrowDownFilled,
   TbSquareRoundedArrowUpFilled,
 } from "react-icons/tb";
 
-const CardPet = ({
-  uuid,
-  nome,
-  raca,
-}) => {
-  const [renderContentPet, setRenderContentPet] = useState<Boolean>(false);
+interface Pet {
+  uuid: string;
+  imagem: string;
+  nome: string;
+  raca: string;
+  handleShowCardPet: () => void;
+}
 
-  const handleSetRenderContentPet = () => setRenderContentPet(!renderContentPet)
-
+const CardPet = ({ imagem, uuid, nome, raca, handleShowCardPet }: Pet) => {
+  const [renderContentPet, setRenderContentPet] = useState(false);
   return (
     <div
-      className={`relative w-76 flex flex-col h-auto rounded-2xl overflow-hidden bg-white border-b-2 border-custom-yellow  shadow-md${renderContentPet ? "shadow-lg" : "shadow-none"}`}
+      className={`relative w-72 flex flex-col h-fit rounded-2xl overflow-hidden bg-white border-b-2 border-custom-yellow shadow-md${renderContentPet ? "shadow-lg" : "shadow-none"}`}
     >
-        <img
-          src={cachorro.src}
-          alt="pet"
-          className={`w-full object-cover h-max`}
-          onClick={handleSetRenderContentPet}
-        />
+      <img
+        src={imagem}
+        alt="pet"
+        className={`w-full h-40 object-cover`}
+        onClick={() => {
+          setRenderContentPet(!renderContentPet);
+        }}
+      />
       <button
         className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-transparent"
-        onClick={handleSetRenderContentPet}
+        onClick={() => {
+          setRenderContentPet(!renderContentPet);
+        }}
       >
         {renderContentPet ? (
           <TbSquareRoundedArrowUpFilled
@@ -53,7 +57,10 @@ const CardPet = ({
         </h1>
         <p className="text-custom-yellow ">{raca}</p>
 
-        <button className="w-3/4 h-8 mt-4 bg-custom-blue-2 rounded-3xl shadow-sm">
+        <button
+          className="w-3/4 h-8 mt-4 bg-custom-blue-2 rounded-3xl shadow-sm"
+          onClick={() => handleShowCardPet(uuid)}
+        >
           Ver mais
         </button>
       </div>

@@ -1,34 +1,52 @@
 import { useEffect, useState } from "react";
-//import { cachorro } from "../../../../public/cachorro_teste.jpeg"
 import CardPet from "@/components/molecules/pet/cardPet";
-import { consultarListaPet } from "@/services/api/pet/petService";
+import FormPetOrganisms from "./formPetOrganisms";
+import DeletePetOrganisms from "./deletePetOrganisms";
+import { buscarPet } from "./utils";
 
-const ShowPetsOrganisms = () => {
-  const [listPets, setListPets] = useState([]);
+const ShowPetsOrganisms = ({ listPets, fetchPets, setFetchPets }) => {
+  const porta = process.env.NEXT_PUBLIC_BACK_APP_API_URL;
+  const [stateRender, setStateRender] = useState<boolean>(true);
+  const [pet, setPet] = useState({});
 
-  useEffect(() => {
-    const consultPet = async () => {
-      try{
-        const pets = (await consultarListaPet());
-        setListPets(pets || []); 
-      }catch(e){
-        console.log(e)
-      }
-    }
-    consultPet();
-  }, []);
+  const showCardPet = async (uuid: string) => {
+    buscarPet(uuid, setPet, stateRender, setStateRender);
+  };
 
   return (
-    <div className="flex flex-wrap gap-2 p-2">
-      {listPets.map((pet, index) => (
-        <CardPet 
-        key={index}
-        uuid={pet.uuid}
-        nome={pet.nome}
-        raca={pet.raca}
-        />
-      ))}
-      
+    <div className="flex flex-wrap gap-2 min-h-min w-full justify-center">
+      {stateRender ? (
+        listPets.map((pet) => (
+          <CardPet
+            key={pet.uuid}
+            imagem={porta + pet.imagem}
+            uuid={pet.uuid}
+            nome={pet.nome}
+            raca={pet.raca}
+            handleShowCardPet={showCardPet}
+          />
+        ))
+      ) : (
+        <>
+          <FormPetOrganisms
+            titleFormPet={pet.nome}
+            uuid={pet.uuid}
+            imagemPet={porta + pet.imagem}
+            updateImage={true}
+            petUpdate={pet}
+            setStateRender={setStateRender}
+            fetchPets={fetchPets}
+            setFetchPets={setFetchPets}
+          />
+          <DeletePetOrganisms
+            nome={pet.nome}
+            uuid={pet.uuid}
+            setStateRender={setStateRender}
+            fetchPets={fetchPets}
+            setFetchPets={setFetchPets}
+          />
+        </>
+      )}
     </div>
   );
 };
